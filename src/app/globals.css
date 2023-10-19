@@ -25,3 +25,41 @@ body {
     )
     rgb(var(--background-start-rgb));
 }
+
+body::-webkit-scrollbar {
+  width: 12px;               /* width of the entire scrollbar */
+}
+body::-webkit-scrollbar-track {
+  background: transparent;        /* color of the tracking area */
+}
+body::-webkit-scrollbar-thumb {
+  background-color: #ffffff50;    /* color of the scroll thumb */
+  border-radius: 20px;       /* roundness of the scroll thumb */
+  border: 3px solid #000000;  /* creates padding around scroll thumb */
+  width: 3px;
+}
+#home-slider{
+  aspect-ratio: 2.5/1;
+}
+
+@media only screen and (max-width: 720px){
+  #home-slider{
+    min-height: 275px;
+   aspect-ratio: 1.5/1;
+  }
+}
+#slider-container{
+  
+}
+.swiper-slide{
+  width: 100%;
+  
+  display: inline-block;
+}
+.manga-slide{
+  width: 175px;
+}
+#popular-cards{
+  display: flex;
+  gap:10px
+}
