@@ -39,7 +39,8 @@ export default function Home() {
       latestChapters: null,
     }
   }
-  const slidersDummyData = faker.helpers.multiple(GenerateBanner, {count: 5})
+  const slidersDummyData = faker.helpers.multiple(GenerateBanner, {
+count: 5})
   const mostPopularDummyData = faker.helpers.multiple(GenerateSeriesData, {count: 15})
     const RecentlyAddedDummyData = faker.helpers.multiple(GenerateSeriesData, {count: 15})
   return (

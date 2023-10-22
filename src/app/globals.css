@@ -38,18 +38,19 @@ body::-webkit-scrollbar-thumb {
   border: 3px solid #000000;  /* creates padding around scroll thumb */
   width: 3px;
 }
-#home-slider{
-  aspect-ratio: 2.5/1;
-}
 
-@media only screen and (max-width: 720px){
-  #home-slider{
-    min-height: 275px;
-   aspect-ratio: 1.5/1;
-  }
+#home-slider{
+  height: 100%;
+  display: flex;
+  max-height: 100%;
+  overflow: hidden;
 }
 #slider-container{
-  
+  height: 100%;
+  display: flex;
+  max-height: 100%;
+  overflow: hidden;
+
 }
 .swiper-slide{
   width: 100%;
@@ -57,9 +58,10 @@ body::-webkit-scrollbar-thumb {
   display: inline-block;
 }
 .manga-slide{
-  width: 175px;
+  width: 150px !important;
 }
 #popular-cards{
   display: flex;
   gap:10px
 }
+

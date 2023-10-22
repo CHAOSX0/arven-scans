@@ -8,6 +8,7 @@ import 'swiper/css/scrollbar';
 import bannerData from '../types/banner';
 import { fa, faker } from '@faker-js/faker';
 import { register } from 'swiper/element/bundle';
+import Link from 'next/link';
 
 register();
 function SLide({BannerURL, title, description, genres, type, URL, index}: bannerData): JSX.Element{
@@ -53,7 +54,7 @@ function SLide({BannerURL, title, description, genres, type, URL, index}: banner
         {description}
       </p>
       <div className="mt-3 flex flex-row gap-3">
-        <a
+        <Link
           href={URL}
           className="flex items-center gap-2 rounded-md bg-blue-500 px-7 py-3 font-semibold text-white transition hover:bg-blue-700 lg:px-14 lg:py-5"
         >
@@ -68,7 +69,7 @@ function SLide({BannerURL, title, description, genres, type, URL, index}: banner
             <path d="M19.778 3.579a.6.6 0 0 1 .124.668L13.113 19.52a.6.6 0 0 1-1.1-.008l-2.45-5.719-5.72-2.45a.6.6 0 0 1-.007-1.1L19.11 3.455a.6.6 0 0 1 .667.124h.001Z" />
           </svg>
           <span>Read now</span>
-        </a>
+        </Link>
         <div className="group flex items-center justify-center gap-2 rounded-md border-[1px] border-black/10 px-5 transition hover:bg-blue-700 dark:border-white/10">
           <svg
             className="h-4 w-4 text-gray-600 group-hover:text-white dark:text-white/60"
