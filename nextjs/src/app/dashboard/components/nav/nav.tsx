@@ -16,8 +16,9 @@ type navElement = {
     }[] | undefined
 }
 function ELement({text, URL, options, isCurrent}: navElement){
+    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     if(options){
-        const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+     
         const open = Boolean(anchorEl);
         const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
           setAnchorEl(event.currentTarget);

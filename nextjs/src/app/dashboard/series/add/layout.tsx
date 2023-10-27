@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import { Inter, Poppins } from 'next/font/google'
-
+import { Toaster } from 'react-hot-toast'
 import { ClassNames } from '@emotion/react'
 const poppins = Poppins({weight: ['600'], subsets: ['latin']})
 const inter = Inter({ subsets: ['latin'] })
@@ -17,7 +17,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${poppins.className}` } style={{overflowX:'hidden'}}>{children}</body>
+      <body className={`${poppins.className}` } style={{overflowX:'hidden'}}>{children} <Toaster /></body>
     </html>
   )
 }

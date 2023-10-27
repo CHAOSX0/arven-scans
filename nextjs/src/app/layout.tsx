@@ -16,7 +16,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${inter.className} ${poppins.className}` } style={{overflowX:'hidden'}}>{children}</body>
+      <body style={{overflowX:'hidden'}} className={`${inter.className} ${poppins.className} h-[100vh] text-sm text-white` } >{children}</body>
     </html>
   )
 }
