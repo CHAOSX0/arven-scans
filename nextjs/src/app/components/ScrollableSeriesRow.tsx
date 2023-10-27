@@ -20,7 +20,8 @@ declare global {
     }
   }
 }
-function Card({title, description, thumbnail, URL, latestChapters, i}: seriesData): JSX.Element{
+function Card({title, description, coverURL, URL: url, latestChapters, i}: seriesData): JSX.Element{
+  const URL = '/series/aha'
     return(
         <swiper-slide
          class="manga-slide"
@@ -33,7 +34,7 @@ function Card({title, description, thumbnail, URL, latestChapters, i}: seriesDat
               <div style={{aspectRatio:1/1.41}}>
               <Image 
                 className="h-56 w-full rounded-lg object-cover dark:shadow-none sm:h-64 lazyloaded"
-               src={thumbnail} fill alt={title}/>
+               src={coverURL} fill alt={title}/>
                </div>
             
               <div className="absolute bottom-0 p-4">

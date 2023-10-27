@@ -1,7 +1,7 @@
 type seriesData = {
     title: string,
     URL: string,
-    thumbnail: string,
+    coverURL: string,
     created_at: string,
     updated_at: string | null,
     description: string,
