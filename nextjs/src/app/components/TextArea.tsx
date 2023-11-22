@@ -1,7 +1,7 @@
 import { TextareaAutosize  as BaseTextareaAutosize } from '@mui/base/TextareaAutosize';
 import { styled } from '@mui/material';
 
-export default function TextareaAutoSize({id}:{id:string}) {
+export default function TextareaAutoSize({id, value, setValue}:{id:string, value?: string, setValue?: Function}) {
     const blue = {
       100: '#DAECFF',
       200: '#b6daff',
@@ -54,5 +54,5 @@ export default function TextareaAutoSize({id}:{id:string}) {
     `,
     );
   
-    return <Textarea id={id} aria-label="empty textarea" placeholder="Description" />;
+    return <Textarea id={id} aria-label="empty textarea" defaultValue={value}  placeholder="Description" />;
   }

@@ -33,7 +33,7 @@ return (
           </div>
 )
 }
-export default function Card({URL, title, created_at, thumbnail, description, latestChapters, i}: seriesData){
+export default function Card({URL, title, created_at, coverURL, description, latestChapters, i}: seriesData){
     const chapters = latestChapters?.map((chapter) => <Chapter key={chapter.number} {...chapter} />)
     return (
         <div className="flex flex-col gap-2">
@@ -43,9 +43,9 @@ export default function Card({URL, title, created_at, thumbnail, description, la
               <div className="absolute bottom-0 left-0 h-full w-full rounded-lg bg-gradient-to-b from-transparent to-black/50 transition" />
               <img
                 className="h-56 w-full rounded-lg object-cover dark:shadow-none sm:h-64 ls-is-cached lazyloaded"
-                data-src={thumbnail}
+                data-src={coverURL}
                 alt="Crimson Eternity"
-                src={thumbnail}
+                src={coverURL}
               />
               <div className="absolute bottom-0 p-4">
                 <p className="group-hover:hidden text-xs capitalize leading-[1rem] text-white text-opacity-60" />

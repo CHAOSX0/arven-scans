@@ -70,7 +70,7 @@ function ELement({text, URL, options, isCurrent}: navElement){
     
 }
 export default function DashboardNav({currentPage}: {currentPage: string}): JSX.Element{  
-       const ElementsData  = [{text: 'Dashboard', URL:"/dashboard"}, {text: 'manga', URL: '/manga'}, {text: 'settings', options:[{text: 'site settings', URL: '/dashboard/settings/site settings'}]}]
+       const ElementsData  = [{text: "Home", URL:'/'},{text: 'chapters', URL:"/dashboard/chapters"}, {text: 'series', URL: '/dashboard/series'}, {text: 'settings', options:[{text: 'site settings', URL: '/dashboard/settings/site-settings'}]}]
        const Elements = ElementsData.map((element: navElement) => <ELement isCurrent={element.text == currentPage} key={element.text} {...element} />)
       
         return (

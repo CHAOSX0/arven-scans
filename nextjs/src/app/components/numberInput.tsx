@@ -61,13 +61,14 @@ const NumberInput = React.forwardRef(function CustomNumberInput(
     );
   });
   
-  function NumberInputBasic() {
-    const [value, setValue] = React.useState<number | undefined>();
+  function NumberInputBasic({defaultValue}: {defaultValue: string}) {
+  
     return (
       <NumberInput
         aria-label="Demo number input"
         placeholder="Type a number…"
-        value={value}
+      
+        defaultValue={value}
     
       />
     );

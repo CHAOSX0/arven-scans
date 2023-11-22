@@ -76,7 +76,7 @@ export default function SelectMenu({label, options, id, isMultiple, setValue, va
       font-family: IBM Plex Sans, sans-serif;
       font-size: 0.875rem;
       box-sizing: border-box;
-      min-width: 320px;
+      width:100%;
       padding: 8px 12px;
       border-radius: 8px;
       text-align: left;

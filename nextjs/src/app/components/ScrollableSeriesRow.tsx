@@ -20,8 +20,8 @@ declare global {
     }
   }
 }
-function Card({title, description, coverURL, URL: url, latestChapters, i}: seriesData): JSX.Element{
-  const URL = '/series/aha'
+function Card({title, description, coverURL, URL, latestChapters, i}: seriesData): JSX.Element{
+  
     return(
         <swiper-slide
          class="manga-slide"
@@ -33,6 +33,7 @@ function Card({title, description, coverURL, URL: url, latestChapters, i}: serie
               <div className="absolute bottom-0 left-0 h-full w-full rounded-lg bg-gradient-to-b from-transparent to-black/50 transition" />
               <div style={{aspectRatio:1/1.41}}>
               <Image 
+                 
                 className="h-56 w-full rounded-lg object-cover dark:shadow-none sm:h-64 lazyloaded"
                src={coverURL} fill alt={title}/>
                </div>
@@ -66,7 +67,7 @@ return (
     <section style={{marginTop:'-5px'}}>
     <div className="flex items-center justify-between">
       <h2 className="my-3 text-lg font-bold">{headerText}</h2>
-      <Link href="https://iimanga.com/manga">
+      <Link href="/SeriesList">
         <span className="text-xs text-gray-400 transition hover:text-gray-300">
           View More
         </span>

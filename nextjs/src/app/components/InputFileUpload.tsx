@@ -14,7 +14,7 @@ const VisuallyHiddenInput = styled('input')({
     width: 1,
   });
   
-  export default function InputFileUpload({label, id}: {label: string, id: string}){
+  export default function InputFileUpload({label, id, multiple}: {label: string, id: string, multiple?: boolean}){
     return (
       <Button onClick={()=>{
          const input = document.getElementById(id) as HTMLInputElement;
@@ -26,6 +26,7 @@ const VisuallyHiddenInput = styled('input')({
       }}  style={{fontFamily:'Poppins'}} component="label" variant="contained" startIcon={<CloudUploadIcon />}>
         {label}
         <VisuallyHiddenInput
+        multiple={multiple}
             accept="image/*"
             id={id}
          type="file" />

@@ -7,46 +7,44 @@ import supabase from "../../../../supabase";
 import Link from "next/link";
 import { TextField } from "@mui/material";
 import Field from "@/app/components/Field";
+import chapter from "@/app/types/chapter";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from 'next/navigation'
 
-async function getSeries(){
-const {error, data} = await supabase.from('series').select('*').limit(100)
+async function getChapters(series: string | null){
+const {error, data} = series ? await supabase.from('chapters').select('*').limit(100).eq('seriesSlug', series) : await supabase.from('chapters').select('*').limit(100)
 if(error) throw error;
 console.log(data)
 return data
 }
 
-async function getSeriesNumber(): Promise<number>{
-    const {error, data, count} = await supabase.from('series').select('*', {count: 'exact', head: true})
+async function getChaptersNumber(series: string | null): Promise<number>{
+    const {error, data, count} = series ? await supabase.from('chapters').select('*', {count: 'exact', head: true}).eq('seriesSlug', series) :  await supabase.from('chapters').select('*', {count: 'exact', head: true})
     if (error) throw error;
     console.log(data)
    // return data[0].count
    return count || 0
 }
-function Row({id, title, slug, description, status, setSeriesData, setSeriesNumber}: {id: number, title: string, slug: string, description: string, status: string, setSeriesData: Function, setSeriesNumber: Function}){
-  const [isOpen, setIsOpen] = useState<boolean>(false)
-  const [top, setTop] = useState(0)
-  const [left, setLeft]= useState(0)
-  console.log('render')
+function Row({id, seriesSlug, number, setChaptersNumber, setChaptersData}: {id: number, seriesSlug: string, number: number, setChaptersNumber: Function, setChaptersData: Function}){
+    const [isOpen, setIsOpen] = useState<boolean>(false)
+    const [top, setTop] = useState<number>(0)
+    const [left, setLeft] = useState<number>(0)
     return (
         <tr className="transition-all duration-300 hover:bg-black/10 dark:hover:bg-white/10 " style={{overflow:'visible'}}>
         <td className="pl-4 py-2 text-sm font-medium">{id}</td>
-        <td className="pl-4 py-2 text-sm font-medium">{title}</td>
-        <td className="pl-4 py-2 text-sm font-medium">{slug}</td>
-        <td className="pl-4 py-2 text-sm font-medium" >{description} </td>
+        <td className="pl-4 py-2 text-sm font-medium">{seriesSlug}</td>
+        <td className="pl-4 py-2 text-sm font-medium">{number}</td>
         <td className="pl-4 py-2 text-sm font-medium">admin</td>
         <td className="pl-4 py-2 text-sm font-medium">0</td>
-        <td className="pl-4 py-2 text-sm font-medium">{status}</td>
         <td className="px-5" style={{overflow:'visible'}}>
           <a
-            onClick={(e)=>{
+              onClick={(e)=>{
               
-              setLeft((e.target as HTMLAnchorElement).offsetLeft)
-              setTop((e.target as HTMLAnchorElement).offsetTop)
-              setIsOpen(prev=>!prev)
-            }}
+                setLeft((e.target as HTMLAnchorElement).offsetLeft)
+                setTop((e.target as HTMLAnchorElement).offsetTop)
+                setIsOpen(prev=>!prev)
+              }}
             className="group inline-block cursor-pointer"
             data-toggle="dropdown"
           >
@@ -65,50 +63,18 @@ function Row({id, title, slug, description, status, setSeriesData, setSeriesNumb
               />
             </svg>
           </a>
-          <div className={`dropdown-menu ml-[-100px] absolute  z-20  min-w-[200px] max-w-fit rounded-md border-[1px] border-black/10 bg-white p-2 text-sm dark:border-white/10 dark:bg-[#09090b] ${!isOpen && 'hidden' }`}>
+          <div className={` ml-[-100px] absolute dropdown-menu absolute z-20  min-w-[200px] max-w-fit rounded-md border-[1px] border-black/10 bg-white p-1 text-sm dark:border-white/10 dark:bg-[#09090b]  ${isOpen ? ' hidden'  :' '}`}>
             <div className="flex flex-col px-0 pt-0">
-              <Link
+             <Link 
+                href={`/dashboard/chapters/edit/${id}`}
                 className="cursor-pointer py-1 sm:px-2 w-full sm:hover:rounded-sm sm:hover:bg-black/10 sm:dark:hover:bg-white/10 duration-200 transition-colors"
-                data-toggle="Chapters"
-                data-id={25}
-                href={`/dashboard/chapters?series=${slug}`}
-              >
-                {" "}
-                Chapters{" "}
-              </Link>
-              <a
+             >
+                edit
+             </Link>
+             <a
                 className="cursor-pointer py-1 sm:px-2 w-full sm:hover:rounded-sm sm:hover:bg-black/10 sm:dark:hover:bg-white/10 duration-200 transition-colors"
-                data-toggle="New Chapter"
-               
-                href={`/dashboard/chapters/add?series=${id}`}
-              >
-                {" "}
-                New Chapter{" "}
-              </a>
-              <a
-                className="cursor-pointer py-1 sm:px-2 w-full sm:hover:rounded-sm sm:hover:bg-black/10 sm:dark:hover:bg-white/10 duration-200 transition-colors"
-                data-toggle="Buld Upload"
-                
-                href={`/dashboard/chapters/bulkCreate?series=${id}`}
-              >
-                {" "}
-                Buld Upload{" "}
-              </a>
-              <a
-                className="cursor-pointer py-1 sm:px-2 w-full sm:hover:rounded-sm sm:hover:bg-black/10 sm:dark:hover:bg-white/10 duration-200 transition-colors"
-                data-toggle="Edit"
-                data-id={25}
-                href={`/dashboard/series/edit/${id}`}
-              >
-                {" "}
-                Edit{" "}
-              </a>
-              <a
-                className="cursor-pointer py-1 sm:px-2 w-full sm:hover:rounded-sm sm:hover:bg-black/10 sm:dark:hover:bg-white/10 duration-200 transition-colors"
-                data-toggle="delete"
-                data-id={25}
                onClick={async ()=>{
-                const promise = supabase.from('series').delete().eq('id', id)
+                const promise = supabase.from('chapters').delete().eq('id', id)
                 toast.promise(promise as any, {
                   loading: 'deleting',
                   error:'failed to delete',
@@ -117,18 +83,17 @@ function Row({id, title, slug, description, status, setSeriesData, setSeriesNumb
                 const {error} = await promise
                 console.error(error)
                 if(!error){
-                 setSeriesData((prev: seriesData[])=>{
-                  const index = prev.findIndex((s: seriesData)=> s.id == id)
+                 setChaptersData((prev: chapter[])=>{
+                  const index = prev.findIndex((s: chapter)=> s.id == id)
                   const res = [...prev].splice( index, 1)
                   return res
                  })
-                 setSeriesNumber((prev: number)=>prev-1)
+                 setChaptersNumber((prev: number)=>prev-1)
                 }
                }}
-              >
-                {" "}
-                Delete{" "}
-              </a>
+             >
+               Delete
+             </a>
             </div>
           </div>
         </td>
@@ -136,59 +101,59 @@ function Row({id, title, slug, description, status, setSeriesData, setSeriesNumb
     )
 }
 export default  function DashboardSeriesPage(){
-  const router = useRouter()
-  useEffect(() => {
-    supabase.auth.getSession().then(res=>{
-        
-      supabase.from('admins').select().eq('id', res.data.session?.user.id ).then((res)=>{
-        console.log(res, 'res')
-       if((res?.data?.length == 0)){
-           router.back()
-       }else{
-       
-       }
-      })
-     })
+    const searchParams = useSearchParams()
+    const router = useRouter()
+    const series = searchParams.get('series')
+    const [ChaptersData, setChaptersData] = useState<chapter[]>([])
+    const [ChaptersNumber, setChaptersNumber] = useState<number>(NaN)
 
-    getSeriesNumber().then(res=>{
-      setSeriesNumber(res)
-    })
-   getSeries().then(res=>{
-    setSeriesData(res)
-   })
-  }, [])
-  async function HandelChange(){
-    const filterTitle = (document.getElementById('filter-input') as HTMLInputElement).value
-    if(filterTitle){
-      const SeriesPromise = supabase.from('series').select('*', {count:"exact"}).textSearch('title', filterTitle).limit(100)
-   
-        const {data, error, count} = await SeriesPromise
+    async function HandelChange(){
+      const filterTitle = (document.getElementById('filter-input') as HTMLInputElement).value
+      if(filterTitle){
+        const SeriesPromise = supabase.from('chapters').select('*', {count:"exact"}).textSearch('seriesSlug', filterTitle).limit(100)
+     
+          const {data, error, count} = await SeriesPromise
+        
+          if(error){
+            alert('opps! an error occurred')
+         
+          }
+          setChaptersData([...data || []])
+          console.log(count)
+          setChaptersNumber(count || 0 )
       
-        if(error){
-          alert('opps! an error occurred')
-       
-        }
-        setSeriesData([...data || []])
-        console.log(count)
-        setSeriesNumber(count || 0 )
-    
-  }
+    }
 }
-    const [SeriesData, setSeriesData] = useState<seriesData[]>([])
-    const [seriesNumber, setSeriesNumber] = useState<number>(0)
-    
-    console.log(seriesNumber)
-    const rows = SeriesData.map((series, i) => <Row key={i} {...series} setSeriesData={setSeriesData}  setSeriesNumber={setSeriesNumber}/>) 
+   
+    useEffect(()=>{
+      supabase.auth.getSession().then(res=>{
+        
+       supabase.from('admins').select().eq('id', res.data.session?.user.id ).then((res)=>{
+        if((res?.data?.length == 0)){
+            router.back()
+        }
+       })
+      })
+        getChapters(series).then((res)=>{
+          setChaptersData(res)
+        })
+        getChaptersNumber(series).then(res=>{
+            setChaptersNumber(res)
+        })
+    }, [])
+   
+    console.log(ChaptersNumber)
+    const rows = ChaptersData.map((chapter, i) => <Row key={i} {...chapter} setChaptersData={setChaptersData} setChaptersNumber={setChaptersNumber} />) 
     return (
         <main>
-        <DashboardNav currentPage="series" />
+        <DashboardNav currentPage="chapters" />
   <section className="container-app pl-5">
     <div className="flex flex-col gap-5">
       <div className="flex flex-col gap-1">
-        <h3 className="text-3xl font-bold tracking-tight">Series List</h3>
+        <h3 className="text-3xl font-bold tracking-tight">Chapters List</h3>
         <p className="text-gray-500 dark:text-white dark:text-opacity-50">
           {" "}
-          Take control of your series from this page.{" "}
+          Take control of your chapters from this page.{" "}
         </p>
       </div>
       <div className="flex flex-col items-end justify-between gap-3 sm:flex-row sm:items-center">
@@ -205,7 +170,7 @@ export default  function DashboardSeriesPage(){
              </div>
         <Link
           className="flex items-center gap-1 rounded-md border-[1px] border-black/10 bg-white px-4 py-2 text-xs font-medium transition hover:bg-black/10 dark:border-white/10 dark:bg-[#09090b] dark:hover:bg-white/10"
-          href="/dashboard/series/add"
+          href="/dashboard/chapters/add"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -225,8 +190,8 @@ export default  function DashboardSeriesPage(){
         </Link>
       </div>
       <div className="boder-black/10 overflow-hidden overflow-x-auto rounded-md border-[1px] dark:border-white/10">
-        <table className="min-w-full" style={{overflow:'visible'}}>
-          <thead className="bg-transparent" style={{overflow:'visible'}}>
+        <table className="min-w-full">
+          <thead className="bg-transparent">
             <tr className="border-b-[1px] border-black/10 dark:border-white/10">
               <th
                 scope="col"
@@ -255,7 +220,7 @@ export default  function DashboardSeriesPage(){
                 className="text-left pl-4 py-2 text-[13px] text-sm font-medium text-black text-opacity-60 dark:text-white"
               >
                 <div className="group flex cursor-pointer items-center gap-1">
-                  <span>Title</span>
+                  <span>Series</span>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
@@ -277,29 +242,7 @@ export default  function DashboardSeriesPage(){
                 className="text-left pl-4 py-2 text-[13px] text-sm font-medium text-black text-opacity-60 dark:text-white"
               >
                 <div className="group flex cursor-pointer items-center gap-1">
-                  <span>Slug</span>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth="1.5"
-                    stroke="currentColor"
-                    className="h-4 w-4"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M8.25 15L12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9"
-                    />
-                  </svg>
-                </div>
-              </th>
-              <th
-                scope="col"
-                className="text-left pl-4 py-2 text-[13px] text-sm font-medium text-black text-opacity-60 dark:text-white"
-              >
-                <div className="group flex cursor-pointer items-center gap-1">
-                  <span>Description</span>
+                  <span>Chapter number</span>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
@@ -360,38 +303,18 @@ export default  function DashboardSeriesPage(){
                   </svg>
                 </div>
               </th>
-              <th
-                scope="col"
-                className="text-left pl-4 py-2 text-[13px] text-sm font-medium text-black text-opacity-60 dark:text-white"
-              >
-                <div className="group flex cursor-pointer items-center gap-1">
-                  <span>Status</span>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth="1.5"
-                    stroke="currentColor"
-                    className="h-4 w-4"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M8.25 15L12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9"
-                    />
-                  </svg>
-                </div>
-              </th>
+             
+            
             </tr>
           </thead>
-          <tbody className="divide-y-[1px] divide-black/10 dark:divide-white/10" style={{overflow:'visible'}}>
+          <tbody className="divide-y-[1px] divide-black/10 dark:divide-white/10">
             {rows}
           </tbody>
         </table>
       </div>
       <div className="flex justify-end">
         <nav className="flex items-center gap-5">
-          <h3 className="hidden sm:block"> Page 1 of {Math.ceil(seriesNumber / 100)} </h3>
+          <h3 className="hidden sm:block"> Page 1 of {Math.ceil(ChaptersNumber / 100)} </h3>
           <ul className="pagination flex gap-1">
             <li
               className="pagination-link pagination-disabled"

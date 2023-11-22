@@ -12,29 +12,12 @@ import Field from '../../../../components/Field';
 import supabase from '../../../../../../supabase';
 import { toast } from 'react-hot-toast';
 import {useEffect} from 'react';
+import seriesData from '@/app/types/series';
 import { useRouter } from 'next/navigation';
 
-export default function Forum() {
+export default function Forum({params:{seriesID}}: {params: {seriesID: string} }) {
   const [genresOptions, setGenresOptions] = React.useState<string[]>([]);
   const router = useRouter()
-  useEffect( () => {
-    supabase.auth.getSession().then(res=>{
-        
-      supabase.from('admins').select().eq('id', res.data.session?.user.id ).then((res)=>{
-       if((res?.data?.length == 0)){
-           router.back()
-       }
-      })
-     })
-    supabase.from('genres').select().then(({data, error}) => {
-      console.log(error)
-      if(error) return toast.error('error fetching genres');
-      console.log(data)
-      toast.success(data.length + ' genres fetched')
-      setGenresOptions(data.map((genre) => genre.text))
-    })
-    
-  }, []);
  
   console.log(genresOptions, 'data')
   //I know this a stupid approach but I am too lazy to do it the right way
@@ -44,7 +27,51 @@ export default function Forum() {
   const [status, setStatus] = React.useState<string | null>(null);
   const [isVisible, setIsVisible] = React.useState<string | null>(null);
   const [isSlider, setIsSlider] = React.useState<string | null>(null);
+  const [descDef, setDescDef] = React.useState<string>('e')
+  const [releaseDef, setReleaseDef] = React.useState<string>('1999')
+  const [rattingDef, setRattingDef] = React.useState<string>('0')
+  useEffect( () => {
+    supabase.auth.getSession().then(res=>{
+        
+      supabase.from('admins').select().eq('id', res.data.session?.user.id ).then((res)=>{
+       if((res?.data?.length == 0)){
+           router.back()
+       }
+      })
+     })
+    supabase.from('series').select().eq('id', seriesID).then((res: any) =>{
+        const series = res.data[0]
+        setGenres(series.genres)
+        setStatus(series.status)
+        setType(series.type)
+        setIsVisible(series.is_visible ? 'Visible' : 'hiddens');
+        setIsSlider(series.isSlider ? 'on' : 'off');
+        setDescDef(series.description)
+        setReleaseDef(series.releaseYear.toString())
+        setRattingDef(series.ratting.toString())
+        console.log(series);
+        (document.getElementById('title-input') as HTMLInputElement).value = series.title;
+        (document.getElementById('slug-input') as HTMLInputElement).value =  series.slug;
+        (document.getElementById('author-input') as HTMLInputElement).value = series.author;
+        (document.getElementById('artist-input') as HTMLInputElement).value = series.artist;
+        (document.getElementById('descr-input') as HTMLInputElement).value = series.description;
+        (document.getElementById('ratting-input') as HTMLInputElement).defaultValue = series.ratting.toString();
+        (document.getElementById('releaseYear-input') as HTMLInputElement).value = series.releaseYear;
+        (document.getElementById('Alt-input') as HTMLInputElement).value = series.alternativeTitles;
+        (document.getElementById('type-input') as HTMLInputElement).value = series.type;
+    })
+    supabase.from('genres').select().then(({data, error}) => {
+      console.log(error)
+      if(error) return toast.error('error fetching genres');
+      console.log(data)
+      toast.success(data.length + ' genres fetched')
+      setGenresOptions(data.map((genre) => genre.text))
 
+    
+    })
+
+    
+  }, []);
   async function HandelSubmit() {
     if (isLoading) return
     setIsLoading(true)
@@ -68,7 +95,7 @@ export default function Forum() {
           upsert: true
         })
     }
-    if(!title || !slug || !descr || !ratting || !releaseYear || !coverFile  || !status || !isVisible || !isSlider) return toast.error('Please fill all the fields');
+    if(!title || !slug || !descr  || !status || !isVisible || !isSlider) return toast.error('Please fill all the fields');
     if (coverFile) {
       const coverPromise = upload(coverFile, `${title}/cover-${coverFile.name}`)
       const bannerPromise = bannerFile ? upload(bannerFile, `${title}/banner-${bannerFile.name}`) : null
@@ -91,8 +118,8 @@ export default function Forum() {
         return
       }
       const coverURL = `http://localhost:8000/storage/v1/object/public/covers/${coverData.path}`
-      const BannerURL = bannerPromise ? `http://localhost:8000/storage/v1/object/public/covers/${(await bannerPromise).data?.path || ''}` : null
-      const { data, error } = await supabase.from('series').insert({
+      const BannerURL = bannerPromise ? `http://localhost:8000/storage/v1/object/public/covers/${(await bannerPromise).data?.path || ''}` : undefined
+      const { data, error } = await supabase.from('series').update({
         title,
         URL: 'series/' + slug,
         created_at: new Date(),
@@ -100,28 +127,64 @@ export default function Forum() {
         description: descr,
         author,
         artist,
-        releaseYear,
+        releaseYear: releaseYear == 1999? undefined : releaseYear,
         type: Type,
         slug,
-        ratting,
+        ratting: ratting == 0 ? undefined : ratting,
         status,
         is_visible: isVisible == "hidden",
         alternativeTitles: Alt,
-        isSlider,
+        isSlider: isSlider == 'on',
         coverURL,
         BannerURL,
         genres
-      })
+      }).eq('id', seriesID)
       if (error) {
         toast.error(error.message)
         setIsLoading(false)
         return
       }
       setIsLoading(false)
-      toast.success('Series created successfully')
+      toast.success('Series updated successfully')
 
       // console.log(coverFile, 'cover')
       //  console.log(data, 'data')
+    }else{
+      const bannerPromise = bannerFile ? upload(bannerFile, `${title}/banner-${bannerFile.name}`) : null
+      if (bannerPromise) {
+        toast.promise(bannerPromise, {
+          loading: 'Uploading banner...',
+          success: 'Banner uploaded',
+          error: 'Failed to upload banner'
+        })
+      }
+      const BannerURL = bannerPromise ? `http://localhost:8000/storage/v1/object/public/covers/${(await bannerPromise).data?.path || ''}` : undefined
+      const { data, error } = await supabase.from('series').update({
+        title,
+        URL: 'series/' + slug,
+        created_at: new Date(),
+        updated_at: null,
+        description: descr,
+        author,
+        artist,
+        BannerURL,
+        releaseYear: releaseYear == 1999? undefined : releaseYear,
+        type: Type,
+        slug,
+        ratting: ratting == 0? undefined : ratting,
+        status,
+        is_visible: isVisible == "hidden",
+        alternativeTitles: Alt,
+        isSlider: isSlider == 'on',
+        genres
+      }).eq('id', seriesID)
+      if (error) {
+        toast.error(error.message)
+        setIsLoading(false)
+        return
+      }
+      setIsLoading(false)
+      toast.success('Series updated successfully')
     }
   }
   return (
@@ -150,6 +213,7 @@ export default function Forum() {
            InputLabelProps={{ style: { color: 'white ' } }}
            id="title-input" 
            label="Title" 
+           defaultValue="i"
            variant="outlined" />
           <Field 
            name='slug' 
@@ -157,11 +221,13 @@ export default function Forum() {
            InputLabelProps={{ style: { color: 'white ' } }} 
            id="slug-input" 
            label="URL slug" 
+           defaultValue='1'
            variant="outlined" />
         </div>
         <div className='flex justify-center w-full'>
           <Field
            name='Alt'
+           defaultValue='2'
            sx={{ flexGrow: 1 }}
            InputLabelProps={{ style: { color: 'white ' } }}
            id="Alt-input"
@@ -187,16 +253,18 @@ export default function Forum() {
           options={['Manhwa', 'Manhua', 'Manga']} />
         </div>
         <div>
-          <TextareaAutoSize id="descr-input" />
+          <TextareaAutoSize id="descr-input" value={descDef} setValue={setDescDef}/>
         </div>
         <div className='flex gap-4 justify-center'>
           <Field 
+          defaultValue='0'
           sx={{ flexGrow: 1 }} 
           InputLabelProps={{ style: { color: 'white ' } }} 
           id="author-input" 
           label="Author" 
           variant="outlined" />
           <Field 
+          defaultValue='1'
           sx={{ flexGrow: 1 }} 
           InputLabelProps={{ style: { color: 'white ' } }} 
           id="artist-input" 
@@ -206,11 +274,11 @@ export default function Forum() {
         <div className='flex flex-col gap-8'>
           <div >
             <div className='text-sm' style={{ color: '#8c959f', paddingBottom: '5px', fontWeight: '400' }}>Rating</div>
-            <NumberInput id="ratting-input" min={0} max={10} />
+            <NumberInput defaultValue={rattingDef} id="ratting-input" min={0} max={10} />
           </div>
           <div>
             <div className='text-sm' style={{ color: '#8c959f', paddingBottom: '5px', fontWeight: '400' }}>Release Year</div>
-            <NumberInput id="releaseYear-input" min={1990} max={new Date().getFullYear()} />
+            <NumberInput defaultValue={releaseDef} id="releaseYear-input" min={1990} max={new Date().getFullYear()} />
           </div>
 
 
@@ -233,7 +301,7 @@ export default function Forum() {
 
       <div className='w-full flex justify-center' style={{ width: '100%' }}>
         <Button className='flex gap-1 rounded-lg' type='submit' sx={{ fontFamily: 'Poppins', textTransform: 'none' }} variant='contained'>
-          Create Series
+          update Series
           <SendIcon />
         </Button>
       </div>

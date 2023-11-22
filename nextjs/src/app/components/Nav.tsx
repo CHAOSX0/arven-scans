@@ -1,6 +1,34 @@
 "use client"
-
+import Link from "next/link"
+import supabase from "../../../supabase"
+import { useEffect, useState } from "react"
+import { useRouter } from "next/navigation"
 export default function Nav() {
+    const [user, setUser] = useState<any>(null)
+    const [isAdmin, setIsAdmin] = useState<boolean>(false)
+    const [isDropDownOpen, setIsDropDownOpen] = useState<boolean>(true)
+    const [isSearchOpen, setIsSearchOpen] = useState<boolean>(false)
+    const router = useRouter()
+    useEffect(()=>{
+        supabase.auth.getUser().then(session=>{
+          setUser(session.data.user)
+          supabase.auth.getSession().then(res=>{
+        
+            supabase.from('admins').select().eq('id', res.data.session?.user.id ).then((res)=>{
+              console.log(res, 'admin')
+             if(!(res?.data?.length == 0)){
+                 setIsAdmin(true)
+                 console.log(isAdmin)
+             }
+            })
+           })
+          supabase.auth.onAuthStateChange((_event, session)=>{
+              setUser(session?.user ?? null)
+          })
+        })
+        
+    }, [])
+    console.log(user)
     return (
       <>
       <header
@@ -9,19 +37,18 @@ export default function Nav() {
     >
         <nav className="flex items-center justify-between py-6">
         <div className="flex h-0 items-center gap-4">
-          <a href="https://iimanga.com" className="py-2 font-bold">
-            {" "}
-            MangaCMS{" "}
-          </a>
+          <Link href="/" className="py-2 font-bold">
+           Home
+          </Link>
           <div className="hidden items-center gap-1 sm:flex">
-            <a
-              href="https://iimanga.com/manga"
+            <Link
+              href="/SeriesList"
               className="nav-link text-sm p-2 hover:bg-black/10 hover:rounded-sm flex gap-2 items-center transition hover:!bg-black/80"
             >
-              <span>Mangas</span>
-            </a>
-            <a
-              href="https://iimanga.com/bookmarks"
+              <span>Series</span>
+            </Link>
+            <Link
+              href="/favorite"
               className="nav-link text-sm p-2 hover:bg-black/10 hover:rounded-sm flex gap-2 items-center transition hover:!bg-black/80"
             >
               <svg
@@ -33,12 +60,14 @@ export default function Nav() {
                 <path d="M0 48V487.7C0 501.1 10.9 512 24.3 512c5 0 9.9-1.5 14-4.4L192 400 345.7 507.6c4.1 2.9 9 4.4 14 4.4c13.4 0 24.3-10.9 24.3-24.3V48c0-26.5-21.5-48-48-48H48C21.5 0 0 21.5 0 48z" />
               </svg>
               <span>Favorites</span>
-            </a>
+            </Link>
           </div>
         </div>
-        <div className="flex items-center gap-2 sm:gap-5">
+        <div className="flex items-center gap-2 sm:gap-5 relative">
           <div className="flex items-center gap-3">
-            <a href="#" id="search-link" aria-label="Search">
+            <a onClick={()=>{
+              setIsSearchOpen((prev: boolean)=>!prev)
+            }} id="search-link" aria-label="Search">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -54,17 +83,8 @@ export default function Nav() {
                 />
               </svg>
             </a>
-            <a href="https://iimanga.com/manga/random" aria-label="Random">
-              <svg
-                className="h-5 w-5 transition hover:text-yellow-400"
-                fill="currentColor"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 640 512"
-              >
-                <path d="M274.9 34.3c-28.1-28.1-73.7-28.1-101.8 0L34.3 173.1c-28.1 28.1-28.1 73.7 0 101.8L173.1 413.7c28.1 28.1 73.7 28.1 101.8 0L413.7 274.9c28.1-28.1 28.1-73.7 0-101.8L274.9 34.3zM200 224a24 24 0 1 1 48 0 24 24 0 1 1 -48 0zM96 200a24 24 0 1 1 0 48 24 24 0 1 1 0-48zM224 376a24 24 0 1 1 0-48 24 24 0 1 1 0 48zM352 200a24 24 0 1 1 0 48 24 24 0 1 1 0-48zM224 120a24 24 0 1 1 0-48 24 24 0 1 1 0 48zm96 328c0 35.3 28.7 64 64 64H576c35.3 0 64-28.7 64-64V256c0-35.3-28.7-64-64-64H461.7c11.6 36 3.1 77-25.4 105.5L320 413.8V448zM480 328a24 24 0 1 1 0 48 24 24 0 1 1 0-48z" />
-              </svg>
-            </a>
-            <a
+           
+            <div
               className="cursor-pointer"
               data-toggle="dark"
               aria-label="Dark Mode"
@@ -83,9 +103,12 @@ export default function Nav() {
                   d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z"
                 />
               </svg>
-            </a>
+            </div>
           </div>
-          <a
+          <div
+            onClick={()=>{
+               setIsDropDownOpen(prev=>!prev)
+            }}
             className="cursor-pointer hover:text-black dark:hover:text-white duration-200 transition-colors text-gray-500"
             data-toggle="dropdown"
             aria-label="User Menu"
@@ -93,44 +116,77 @@ export default function Nav() {
             <img
               className="h-9 w-9 rounded-full border-[1px] border-solid border-black/10 object-cover object-top"
               alt="avatar"
-              src="https://iimanga.com/images/user/no-image.jpg"
+              src={user?.user_metadata.avatar ? `http://localhost:8000/storage/v1/object/public/avatars/${user?.user_metadata.avatar}`: '/no-image.jpg'}
             />
-          </a>
-          <div className="dropdown-menu absolute left-0 top-6 z-20 hidden min-w-[200px] max-w-fit rounded-md border-[1px] border-black/10 bg-white p-2 text-sm dark:border-white/10 dark:bg-[#09090b]">
+          </div>
+          <div className={`${isDropDownOpen ? 'hidden' : ''} dropdown-menu absolute right-0 top-10 z-20  min-w-[200px] max-w-fit rounded-md border-[1px] border-black/10 bg-white p-2 text-sm dark:border-white/10 dark:bg-[#09090b]`}>
             <div className="flex flex-col px-0 pt-0">
-              <a
+              {!user && (
+                <>
+                  <Link
+                  className="cursor-pointer py-1 sm:px-2 w-full sm:hover:rounded-sm sm:hover:bg-black/10 sm:dark:hover:bg-white/10 duration-200 transition-colors"
+                  href="/signup"
+                >
+                  {" "}
+                  Register{" "}
+                </Link>
+                <Link
+                  className="cursor-pointer py-1 sm:px-2 w-full sm:hover:rounded-sm sm:hover:bg-black/10 sm:dark:hover:bg-white/10 duration-200 transition-colors"
+                  href="/login"
+                >
+                  {" "}
+                  Login{" "}
+                </Link>
+                </>
+              )}
+              {user && (
+              <>
+                 <div
+                 className="cursor-pointer py-1 sm:px-2 w-full sm:hover:rounded-sm sm:hover:bg-black/10 sm:dark:hover:bg-white/10 duration-200 transition-colors"
+                 onClick={()=>{
+                  supabase.auth.signOut()
+                 }}
+               >
+                 Logout
+               </div>
+               <Link
+                 className="cursor-pointer py-1 sm:px-2 w-full sm:hover:rounded-sm sm:hover:bg-black/10 sm:dark:hover:bg-white/10 duration-200 transition-colors"
+                 href='/userSettings'
+               >
+                user Settings
+               </Link>
+               {isAdmin && (
+                <Link
                 className="cursor-pointer py-1 sm:px-2 w-full sm:hover:rounded-sm sm:hover:bg-black/10 sm:dark:hover:bg-white/10 duration-200 transition-colors"
-                href="https://iimanga.com/register"
+                href="/dashboard/series"
               >
-                {" "}
-                Register{" "}
-              </a>
-              <a
-                className="cursor-pointer py-1 sm:px-2 w-full sm:hover:rounded-sm sm:hover:bg-black/10 sm:dark:hover:bg-white/10 duration-200 transition-colors"
-                href="https://iimanga.com/login"
-              >
-                {" "}
-                Login{" "}
-              </a>
+                Dashboard
+              </Link>
+              )}
+              </>
+              )}
             </div>
           </div>
         </div>
       </nav>
        <div
        id="nav-search"
-       className="animate__animated animate__fast mb-8 hidden w-full sm:absolute"
+       className={`animate__animated animate__fast mb-8 w-full sm:absolute h-10 ${!isSearchOpen && 'hidden' }`}
      >
        <form
-         method="GET"
-         action="https://iimanga.com/manga"
-         className="flex gap-3"
+         onSubmit={(e)=>{
+          e.preventDefault()
+          const title = (document.getElementById('search-input') as HTMLInputElement).value
+          router.push(`/SeriesList?title=${title}`)
+         }}
+         className="flex gap-3 h-full"
          id="search-form"
        >
          <div className="relative w-full">
            <input
              name="title"
              type="text"
-             className="input w-full sm:bg-[#191919] sm:placeholder:text-white/50"
+             className="input w-full sm:bg-[#191919] sm:placeholder:text-white/50 h-full"
              autoComplete="off"
              id="search-input"
              placeholder="Search for content..."
