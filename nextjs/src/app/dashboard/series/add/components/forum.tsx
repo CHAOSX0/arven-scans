@@ -10,6 +10,7 @@ import SelectMenu from '../../../../components/SelectMenu';
 import TextareaAutoSize from '../../../../components/TextArea';
 import Field from '../../../../components/Field';
 import supabase from '../../../../../../supabase';
+
 import { toast } from 'react-hot-toast';
 import {useEffect} from 'react';
 import { useRouter } from 'next/navigation';
@@ -47,6 +48,7 @@ export default function Forum() {
   const [isSlider, setIsSlider] = React.useState<string | null>(null);
 
   async function HandelSubmit() {
+    console.log(isLoading)
     if (isLoading) return
     setIsLoading(true)
     //get values for all inputs in one line
@@ -69,7 +71,7 @@ export default function Forum() {
           upsert: true
         })
     }
-    if(!title || !slug || !descr || !ratting || !releaseYear || !coverFile  || !status || !isVisible || !isSlider) return toast.error('Please fill all the fields');
+    if(!title || !slug || !descr || !ratting || !releaseYear || !coverFile  || !status || !isVisible || !isSlider) return console.log(toast.error('Please fill all the fields'), 'toast');
     if (coverFile) {
       const coverPromise = upload(coverFile, `${title}/cover-${coverFile.name}`)
       const bannerPromise = bannerFile ? upload(bannerFile, `${title}/banner-${bannerFile.name}`) : null
@@ -114,13 +116,13 @@ export default function Forum() {
         genres
       })
       if (error) {
+        toast.error('failed')
         toast.error(error.message)
         setIsLoading(false)
         return
       }
       setIsLoading(false)
       toast.success('Series created successfully')
-
       // console.log(coverFile, 'cover')
       //  console.log(data, 'data')
     }

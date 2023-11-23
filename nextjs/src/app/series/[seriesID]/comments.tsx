@@ -5,6 +5,7 @@ import supabase from "../../../../supabase";
 import {useState, useEffect} from 'react'
 import toast from "react-hot-toast";
 import chapter from "@/app/types/chapter";
+
 type comment= {
     created_at: string,
     text: string,
@@ -18,9 +19,10 @@ type comment= {
 
 function timeAgo(dateString: string) {
     const currentDate = new Date();
-    const pastDate = new Date(dateString);
-  
-    const seconds = Math.floor((currentDate.getMilliseconds() - pastDate.getMilliseconds()) / 1000);
+    console.log(dateString)
+    const pastDate = new Date(parseInt(dateString));
+    console.log(pastDate)
+    const seconds = Math.floor((currentDate.getTime() - parseInt(dateString)) / 1000);
     const minutes = Math.floor(seconds / 60);
     const hours = Math.floor(minutes / 60);
     const days = Math.floor(hours / 24);
@@ -56,7 +58,7 @@ function Comment({author, text, time, votes, id, authorAvatar, authorUsername}: 
         <div className="flex gap-3">
           <img
             className="h-10 w-10 rounded-full border-[1px] border-solid border-black/5 object-cover object-top dark:border-none"
-            src={authorAvatar}
+            src={`https://uuckqeakqoiezqehbitr.supabase.co/storage/v1/object/public/avatars/${authorAvatar}` || '/no-image.jpg'}
             alt="admin"
           />
           <div className="flex w-full flex-col gap-2">
@@ -162,7 +164,7 @@ export default function SeriesComments({slug}: {slug: string}){
        if(user){
           const text = (document.getElementById('comment-input')  as HTMLInputElement).value
           const author = user.id
-          const {error, data} = await supabase.from('comments').insert({text, author, votes: 0, authorUsername: user.user_metadata.username, authorAvatar: user.user_metadata.avatar, seriesSlug: slug, time: new Date().toDateString()}).select()
+          const {error, data} = await supabase.from('comments').insert({text, author, votes: 0, authorUsername: user.user_metadata.username, authorAvatar: user.user_metadata.avatar, seriesSlug: slug, time: `${new Date().getTime()}`}).select()
           if(!error){
             toast.success('posted comment successfully')
             console.log(data, 'data')
