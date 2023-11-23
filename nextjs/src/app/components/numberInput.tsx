@@ -68,7 +68,7 @@ const NumberInput = React.forwardRef(function CustomNumberInput(
         aria-label="Demo number input"
         placeholder="Type a number…"
       
-        defaultValue={value}
+        defaultValue={defaultValue}
     
       />
     );

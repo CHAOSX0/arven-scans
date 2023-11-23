@@ -12,7 +12,7 @@ async function getRecentChapters(n: number){
 export default async function RecentChapters(){
  
   const data = await getRecentChapters(15)
-  console.log(data[0].chapters)
+  console.log(data[0]?.chapters)
   const Elements = data.map((series, i) => <Card key={i} {...series} i={i} />)
     return(
         <section>

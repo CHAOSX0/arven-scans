@@ -117,8 +117,8 @@ export default function Forum({params:{seriesID}}: {params: {seriesID: string} }
         setIsLoading(false)
         return
       }
-      const coverURL = `http://localhost:8000/storage/v1/object/public/covers/${coverData.path}`
-      const BannerURL = bannerPromise ? `http://localhost:8000/storage/v1/object/public/covers/${(await bannerPromise).data?.path || ''}` : undefined
+      const coverURL = `https://uuckqeakqoiezqehbitr.supabase.co/storage/v1/object/public/covers/${coverData.path}`
+      const BannerURL = bannerPromise ? `https://uuckqeakqoiezqehbitr.supabase.co/storage/v1/object/public/covers/${(await bannerPromise).data?.path || ''}` : undefined
       const { data, error } = await supabase.from('series').update({
         title,
         URL: 'series/' + slug,
@@ -158,7 +158,7 @@ export default function Forum({params:{seriesID}}: {params: {seriesID: string} }
           error: 'Failed to upload banner'
         })
       }
-      const BannerURL = bannerPromise ? `http://localhost:8000/storage/v1/object/public/covers/${(await bannerPromise).data?.path || ''}` : undefined
+      const BannerURL = bannerPromise ? `https://uuckqeakqoiezqehbitr.supabase.co/storage/v1/object/public/covers/${(await bannerPromise).data?.path || ''}` : undefined
       const { data, error } = await supabase.from('series').update({
         title,
         URL: 'series/' + slug,

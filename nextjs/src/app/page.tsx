@@ -10,7 +10,7 @@ import bannerData from './types/banner'
 import type { Metadata, ResolvingMetadata } from 'next'
 async function getBanners(n: number): Promise<bannerData[]>{
 
-  const res = await fetch('http://localhost:8000/rest/v1/series?isSlider=is.true&BannerURL=neq.null', {
+  const res = await fetch('https://uuckqeakqoiezqehbitr.supabase.co/rest/v1/series?isSlider=is.true&BannerURL=neq.null', {
     next:{
       revalidate: 10,  // Revalidate every 10 seconds
 
@@ -18,8 +18,9 @@ async function getBanners(n: number): Promise<bannerData[]>{
     headers:{
       'Range-Unit': 'items',
       'Range': '0-'+n,
-      'apikey':'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyAgCiAgICAicm9sZSI6ICJzZXJ2aWNlX3JvbGUiLAogICAgImlzcyI6ICJzdXBhYmFzZS1kZW1vIiwKICAgICJpYXQiOiAxNjQxNzY5MjAwLAogICAgImV4cCI6IDE3OTk1MzU2MDAKfQ.DaYlNEoUrrEn2Ig7tqibS-PHK5vgusbcbo7X36XVt4Q',
-      'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyAgCiAgICAicm9sZSI6ICJzZXJ2aWNlX3JvbGUiLAogICAgImlzcyI6ICJzdXBhYmFzZS1kZW1vIiwKICAgICJpYXQiOiAxNjQxNzY5MjAwLAogICAgImV4cCI6IDE3OTk1MzU2MDAKfQ.DaYlNEoUrrEn2Ig7tqibS-PHK5vgusbcbo7X36XVt4Q'
+      //
+      'apikey':'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV1Y2txZWFrcW9pZXpxZWhiaXRyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDA3NDQzNTEsImV4cCI6MjAxNjMyMDM1MX0.ioakpOpVL5lr7E_a-RLftdosaQ0uMl24_SryLlWRaDI',
+      'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV1Y2txZWFrcW9pZXpxZWhiaXRyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDA3NDQzNTEsImV4cCI6MjAxNjMyMDM1MX0.ioakpOpVL5lr7E_a-RLftdosaQ0uMl24_SryLlWRaDI'
     }
   })
   if(!res.ok){
@@ -36,15 +37,15 @@ async function getBanners(n: number): Promise<bannerData[]>{
 //  return await res.json()
 }
 async function getPopularSeriesData(n: number): Promise<seriesData[]>{
-  const res = await fetch('http://localhost:8000/rest/v1/series?order=viewCount', {
+  const res = await fetch('https://uuckqeakqoiezqehbitr.supabase.co/rest/v1/series?order=viewCount', {
     next:{
       revalidate: 10
     },
     headers:{
       'Range-Unit': 'items',
       'Range': '0-'+n,
-      'apikey':'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyAgCiAgICAicm9sZSI6ICJzZXJ2aWNlX3JvbGUiLAogICAgImlzcyI6ICJzdXBhYmFzZS1kZW1vIiwKICAgICJpYXQiOiAxNjQxNzY5MjAwLAogICAgImV4cCI6IDE3OTk1MzU2MDAKfQ.DaYlNEoUrrEn2Ig7tqibS-PHK5vgusbcbo7X36XVt4Q',
-      'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyAgCiAgICAicm9sZSI6ICJzZXJ2aWNlX3JvbGUiLAogICAgImlzcyI6ICJzdXBhYmFzZS1kZW1vIiwKICAgICJpYXQiOiAxNjQxNzY5MjAwLAogICAgImV4cCI6IDE3OTk1MzU2MDAKfQ.DaYlNEoUrrEn2Ig7tqibS-PHK5vgusbcbo7X36XVt4Q'
+      'apikey':'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV1Y2txZWFrcW9pZXpxZWhiaXRyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDA3NDQzNTEsImV4cCI6MjAxNjMyMDM1MX0.ioakpOpVL5lr7E_a-RLftdosaQ0uMl24_SryLlWRaDI',
+      'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV1Y2txZWFrcW9pZXpxZWhiaXRyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDA3NDQzNTEsImV4cCI6MjAxNjMyMDM1MX0.ioakpOpVL5lr7E_a-RLftdosaQ0uMl24_SryLlWRaDI'
     }
   });
   
@@ -61,15 +62,15 @@ async function getPopularSeriesData(n: number): Promise<seriesData[]>{
   return await res.json()
 }
 async function getLatesAddedSeriesData(n: number): Promise<seriesData[]>{
-  const res = await fetch('http://localhost:8000/rest/v1/series?order=created_at', {
+  const res = await fetch('https://uuckqeakqoiezqehbitr.supabase.co/rest/v1/series?order=created_at', {
     next:{
       revalidate: 10
     },
     headers:{
       'Range-Unit': 'items',
       'Range': '0-'+n,
-      'apikey':'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyAgCiAgICAicm9sZSI6ICJzZXJ2aWNlX3JvbGUiLAogICAgImlzcyI6ICJzdXBhYmFzZS1kZW1vIiwKICAgICJpYXQiOiAxNjQxNzY5MjAwLAogICAgImV4cCI6IDE3OTk1MzU2MDAKfQ.DaYlNEoUrrEn2Ig7tqibS-PHK5vgusbcbo7X36XVt4Q',
-      'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyAgCiAgICAicm9sZSI6ICJzZXJ2aWNlX3JvbGUiLAogICAgImlzcyI6ICJzdXBhYmFzZS1kZW1vIiwKICAgICJpYXQiOiAxNjQxNzY5MjAwLAogICAgImV4cCI6IDE3OTk1MzU2MDAKfQ.DaYlNEoUrrEn2Ig7tqibS-PHK5vgusbcbo7X36XVt4Q'
+      'apikey':'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV1Y2txZWFrcW9pZXpxZWhiaXRyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDA3NDQzNTEsImV4cCI6MjAxNjMyMDM1MX0.ioakpOpVL5lr7E_a-RLftdosaQ0uMl24_SryLlWRaDI',
+      'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV1Y2txZWFrcW9pZXpxZWhiaXRyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDA3NDQzNTEsImV4cCI6MjAxNjMyMDM1MX0.ioakpOpVL5lr7E_a-RLftdosaQ0uMl24_SryLlWRaDI'
     }
   });
   
@@ -89,7 +90,7 @@ type Props = {
   params: { id: string }
   searchParams: { [key: string]: string | string[] | undefined }
 }
-export const etadata: Metadata = {
+export const metadata: Metadata = {
     title: "Arven Scans Manhua, Manhwa and Manga",
     description:'read Manhuas, Manhwas and Mangas for free on Arven Scans',
     keywords:"Manhua Manhwa Manga anime",

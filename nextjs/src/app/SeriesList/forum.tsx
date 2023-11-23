@@ -14,7 +14,7 @@ export default function SeriesListForum(){
     const genre = searchParams.get('genre')
     const title = searchParams.get('title')
     const [isLoading, setIsLoading] = useState<boolean>(false)
-    const [genres, setGenres] = genre ? useState<string[]>([genre]) : useState<string[]>([]);
+    const [genres, setGenres] = useState<string[]>(genre ? [genre] : [] )
     const [type, setType] = useState<string>('');
     const [status, setStatus] = useState<string | null>(null);
     const [GenresOptions, setGenresOptions] = useState<string[]>(['y', 'bye']);

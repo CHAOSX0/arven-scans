@@ -90,8 +90,8 @@ export default function Forum() {
         setIsLoading(false)
         return
       }
-      const coverURL = `http://localhost:8000/storage/v1/object/public/covers/${coverData.path}`
-      const BannerURL = bannerPromise ? `http://localhost:8000/storage/v1/object/public/covers/${(await bannerPromise).data?.path || ''}` : null
+      const coverURL = `https://uuckqeakqoiezqehbitr.supabase.co/storage/v1/object/public/covers/${coverData.path}`
+      const BannerURL = bannerPromise ? `https://uuckqeakqoiezqehbitr.supabase.co/storage/v1/object/public/covers/${(await bannerPromise).data?.path || ''}` : null
       const { data, error } = await supabase.from('series').insert({
         title,
         URL: 'series/' + slug,

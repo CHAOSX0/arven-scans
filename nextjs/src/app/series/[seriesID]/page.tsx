@@ -8,6 +8,7 @@ import SwitchContainer from "./switchContainer";
 function Genres({ genres }: { genres: string[] }) { 
   return genres.map((genre, i) => (
     <Link
+    key={i}
     href={`/SeriesList?genre=${genre}`}
     className="inline-block rounded-md border-[1px] border-black/10 px-4 py-2 text-xs font-light shadow-sm transition hover:bg-black hover:text-white dark:border-white/10 dark:text-white dark:shadow-none dark:hover:bg-white dark:hover:text-black"
   >
@@ -26,12 +27,12 @@ type Props = {
  
 async function getData(slug: string): Promise<seriesData>{
   
-    const res = await fetch(`http://localhost:8000/rest/v1/series?slug=eq.${slug}`, {
+    const res = await fetch(`https://uuckqeakqoiezqehbitr.supabase.co/rest/v1/series?slug=eq.${slug}`, {
       
       headers:{
         
-        'apikey':'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyAgCiAgICAicm9sZSI6ICJzZXJ2aWNlX3JvbGUiLAogICAgImlzcyI6ICJzdXBhYmFzZS1kZW1vIiwKICAgICJpYXQiOiAxNjQxNzY5MjAwLAogICAgImV4cCI6IDE3OTk1MzU2MDAKfQ.DaYlNEoUrrEn2Ig7tqibS-PHK5vgusbcbo7X36XVt4Q',
-        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyAgCiAgICAicm9sZSI6ICJzZXJ2aWNlX3JvbGUiLAogICAgImlzcyI6ICJzdXBhYmFzZS1kZW1vIiwKICAgICJpYXQiOiAxNjQxNzY5MjAwLAogICAgImV4cCI6IDE3OTk1MzU2MDAKfQ.DaYlNEoUrrEn2Ig7tqibS-PHK5vgusbcbo7X36XVt4Q'
+        'apikey':'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV1Y2txZWFrcW9pZXpxZWhiaXRyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDA3NDQzNTEsImV4cCI6MjAxNjMyMDM1MX0.ioakpOpVL5lr7E_a-RLftdosaQ0uMl24_SryLlWRaDI',
+        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV1Y2txZWFrcW9pZXpxZWhiaXRyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDA3NDQzNTEsImV4cCI6MjAxNjMyMDM1MX0.ioakpOpVL5lr7E_a-RLftdosaQ0uMl24_SryLlWRaDI'
       }
     });
     

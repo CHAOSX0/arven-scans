@@ -25,7 +25,7 @@ export default async function ChapterList({slug}: {slug: string}) {
 const chaptersData = await getCahpters(slug)
 console.log(chaptersData)
 chaptersData?.sort((a, b) => b.number - a.number)
-const chapters = chaptersData ? chaptersData.map((chapter: chapter) => <Chapter {...chapter} /> ): "No Chapters Found";
+const chapters = chaptersData ? chaptersData.map((chapter: chapter, i:number) => <Chapter key={i} {...chapter} /> ): "No Chapters Found";
 return (
     <div className="mt-3 block lg:flex lg:gap-5">
     <div id="chapters-list" className="w-full lg:w-3/4">

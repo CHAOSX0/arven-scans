@@ -116,7 +116,7 @@ export default function Nav() {
             <img
               className="h-9 w-9 rounded-full border-[1px] border-solid border-black/10 object-cover object-top"
               alt="avatar"
-              src={user?.user_metadata.avatar ? `http://localhost:8000/storage/v1/object/public/avatars/${user?.user_metadata.avatar}`: '/no-image.jpg'}
+              src={user?.user_metadata.avatar ? `https://uuckqeakqoiezqehbitr.supabase.co/storage/v1/object/public/avatars/${user?.user_metadata.avatar}`: '/no-image.jpg'}
             />
           </div>
           <div className={`${isDropDownOpen ? 'hidden' : ''} dropdown-menu absolute right-0 top-10 z-20  min-w-[200px] max-w-fit rounded-md border-[1px] border-black/10 bg-white p-2 text-sm dark:border-white/10 dark:bg-[#09090b]`}>

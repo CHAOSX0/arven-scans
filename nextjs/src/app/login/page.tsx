@@ -116,8 +116,7 @@ export default function Login() {
       </div>
       <div className="flex flex-col gap-1">
         <span className="text-sm">
-          {" "}
-          Don't have an account?{" "}
+          Don&#39;t have an account?
           <Link
             className="text-blue-400 hover:text-blue-500 duration-200 transition-all"
             href="/signup"

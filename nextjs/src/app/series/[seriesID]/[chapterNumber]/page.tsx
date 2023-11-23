@@ -148,7 +148,7 @@ export default async function({params : {seriesID, chapterNumber}}: {params: {se
       <Header title={ParentData?.title} number={data?.number} URL={ParentData?.URL} />
       <Ender  data={data} ParentData={ParentData} AllChapters={AllChapters}/>
       <div className="mx-auto max-w-3xl" id="chapter-container">
-        {data?.pages?.map((page) => (<img src={page} alt={ParentData?.title || 'hi'} className="chapter-image w-full cursor-pointer" />))}
+        {data?.pages?.map((page, i) => (<img key={i} src={page} alt={ParentData?.title || 'hi'} className="chapter-image w-full cursor-pointer" />))}
       </div>
       <Ender data={data} ParentData={ParentData} AllChapters={AllChapters} />
       <div className="container mx-auto mt-10 flex justify-center px-3 sm:px-0 md:px-0">

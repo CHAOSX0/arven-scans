@@ -2,7 +2,7 @@
 
 import chapter from "@/app/types/chapter"
 import { useRouter } from "next/navigation";
-export default function({AllChapters, data}: {AllChapters: chapter[]| null, data: chapter|null}){
+export default function SelectChapters({AllChapters, data}: {AllChapters: chapter[]| null, data: chapter|null}){
     const router = useRouter()
     return (
         <select onChange={(e)=>{

@@ -55,7 +55,7 @@ export default function AddChapter() {
 				upsert: true
 			})
 			if (error) return toast.error(`error uploading page ${error.message}`)
-			return `http://localhost:8000/storage/v1/object/public/pages/${data?.path}`
+			return `https://uuckqeakqoiezqehbitr.supabase.co/storage/v1/object/public/pages/${data?.path}`
 		}))
 		toast.promise(pagesURLsPromise, {
 			loading: 'uploading pages',
