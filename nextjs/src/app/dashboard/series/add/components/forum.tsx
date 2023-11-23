@@ -15,6 +15,7 @@ import {useEffect} from 'react';
 import { useRouter } from 'next/navigation';
 
 export default function Forum() {
+  
   const [genresOptions, setGenresOptions] = React.useState<string[]>([]);
   const router = useRouter()
   useEffect( () => {
