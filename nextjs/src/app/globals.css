@@ -68,4 +68,20 @@ body::-webkit-scrollbar-thumb {
 }
 
 
+::-webkit-scrollbar{
+  width: 10px;
+    height: 10px;
+    background: hsla(0,0%,55%,.2);
+    border-radius: 10px;
+}
 
+::-webkit-scrollbar-thumb{
+  background: hsla(0,0%,55%,.7);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-track{
+ 
+    border-radius: 10px;
+
+}

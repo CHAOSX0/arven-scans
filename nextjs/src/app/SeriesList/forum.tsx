@@ -9,6 +9,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import supabase from "../../../supabase";
 import Card from "./card";
 import { useSearchParams } from 'next/navigation'
+
 export default function SeriesListForum(){
     const searchParams = useSearchParams()
     const genre = searchParams.get('genre')

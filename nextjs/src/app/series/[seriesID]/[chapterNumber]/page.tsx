@@ -6,6 +6,8 @@ import Footer from "@/app/components/footer";
 import Image from "next/image";
 import Link from "next/link";
 import SelectChapters from "./selectChapters";
+import ViewCounter from "./viewCounter";
+
 async function getALlChapters(seriesID: string): Promise<chapter[]>{
 const {error, data} = await supabase.from("chapters").select("*").eq("seriesSlug", seriesID)
 if (error){ 
@@ -143,6 +145,7 @@ export default async function({params : {seriesID, chapterNumber}}: {params: {se
     return (
         <>
  <Nav />
+
   <main className="container mx-auto px-3 sm:px-0 md:px-0">
     <section className="flex flex-col items-center">
       <Header title={ParentData?.title} number={data?.number} URL={ParentData?.URL} />
@@ -202,6 +205,8 @@ export default async function({params : {seriesID, chapterNumber}}: {params: {se
 
   </main>
  <Footer />
+ {/*//# this component is a work around to run react hooks on the client, it does not render any actual content*/}
+ <ViewCounter chapterID={data?.id?.toString()} SeriesID={ParentData?.id} />
 </>
 
     )

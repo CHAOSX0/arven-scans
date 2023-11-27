@@ -179,6 +179,8 @@ export default function SeriesComments({slug}: {slug: string}){
                 }
                
             })
+            setFormText('')
+            setFormSize(0)
           }else{
             toast.error(error.message)
           }
