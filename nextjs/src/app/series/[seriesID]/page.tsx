@@ -98,39 +98,39 @@ export default async function Series({ params }: { params: { seriesID: string } 
                
               </div>
               <div className="hidden sm:flex sm:flex-col sm:gap-1 sm:text-sm">
-                <p className="flex justify-between !text-opacity-50 dark:text-white">
-                  <span>Status</span>
+                <p className="flex justify-between !text-opacity-50 dark:text-white text-[--text-color]">
+                  <span className="text-[--text-color]">Status</span>
                   <a
                     href="https://iimanga.com/manga?status=Ongoing"
-                    className="transition-colors duration-200 hover:text-blue-500 dark:hover:text-white"
+                    className="transition-colors duration-200 hover:text-blue-500 dark:hover:text-white text-[--text-color]"
                   >
-                    <span className="capitalize">{status}</span>
+                    <span className="capitalize text-[--text-color]">{status}</span>
                   </a>
                 </p>
                 <p className="flex justify-between !text-opacity-50 dark:text-white">
-                  <span>Type</span>
+                  <span  className="text-[--text-color]">Type</span>
                   <a
                     href="https://iimanga.com/manga?type=Manhua"
-                    className="transition-colors duration-200 hover:text-blue-500 dark:hover:text-white"
+                    className="transition-colors duration-200 hover:text-blue-500 dark:hover:text-white "
                   >
-                    <span className="capitalize">{type}</span>
+                    <span className="capitalize text-[--text-color]">{type}</span>
                   </a>
                 </p>
-                <p className="flex justify-between !text-opacity-50 dark:text-white">
-                  <span>Year</span>
-                  <span className="capitalize">{releaseYear}</span>
+                <p className="flex justify-between !text-opacity-50 dark:text-white text-[--text-color]">
+                  <span  className="text-[--text-color]" >Year</span>
+                  <span className="capitalize !text-[--text-color]">{releaseYear}</span>
                 </p>
-                <p className="flex justify-between !text-opacity-50 dark:text-white">
+                <p className="flex justify-between !text-opacity-50 dark:text-white !text-[--text-color]">
                   <span>Author</span>
                   <span className="capitalize">{author}</span>
                 </p>
-                <p className="flex justify-between !text-opacity-50 dark:text-white">
-                  <span>Artist</span>
-                  <span className="capitalize">{artist}</span>
+                <p className="flex justify-between !text-opacity-50 dark:text-white text-[--text-color]">
+                  <span className="!text-[--text-color]">Artist</span>
+                  <span className="capitalize text-[--text-color]">{artist}</span>
                 </p>
-                <p className="flex justify-between !text-opacity-50 dark:text-white">
-                  <span>Posted</span>
-                  <span className="capitalize">admin</span>
+                <p className="flex justify-between !text-opacity-50 dark:text-white text-[--text-color]">
+                  <span className="!text-[--text-color]">Posted</span>
+                  <span className="capitalize text-[--text-color]">admin</span>
                 </p>
               </div>
             </div>
@@ -140,15 +140,15 @@ export default async function Series({ params }: { params: { seriesID: string } 
               <Genres genres={genres} />
               </div>
               <div className="flex flex-col gap-1">
-                <h2 className="text-2xl font-bold leading-[1.5rem]">
+                <h2 className="text-2xl font-bold leading-[1.5rem] text-[--text-color]">
                   {title}
-                  <span className="text-sm capitalize !text-opacity-50 dark:text-white">
+                  <span className="text-sm capitalize !text-opacity-50 dark:text-white text-[--text-color]">
                     {" "}
                     {type}
                   </span>
                 </h2>
-                <div className="flex gap-1">
-                  <span className="font-semibold">Alternative Titles:</span>
+                <div className="flex gap-1 text-[--text-color]">
+                  <span className="font-semibold text-[--text-color]">Alternative Titles:</span>
                   <span className="block text-sm text-gray-700 dark:text-gray-400">
                    {alternativeTitles}
                   </span>
@@ -156,10 +156,10 @@ export default async function Series({ params }: { params: { seriesID: string } 
               </div>
               <div className="flex flex-col gap-1">
                 <div className="flex flex-col gap-1">
-                  <span className="font-semibold underline">
+                  <span className="font-semibold underline text-[--text-color]">
                     Story of: {title}
                   </span>
-                  <p className="text-black dark:text-gray-100" id="description" />
+                  <p className="text-black dark:text-gray-100 text-[--text-color]" id="description" />
                   <p>
                    {description}
                   </p>
@@ -167,7 +167,7 @@ export default async function Series({ params }: { params: { seriesID: string } 
                   <p />
                   <span
                     id="show-more"
-                    className="hidden cursor-pointer transition hover:text-gray-400"
+                    className="hidden cursor-pointer transition hover:text-gray-400 text-[--text-color]"
                   >
                     ...Show more
                   </span>
@@ -176,7 +176,7 @@ export default async function Series({ params }: { params: { seriesID: string } 
               <div className="-mb-3 mt-3 flex gap-3">
                 
                 
-                <div className="flex items-center justify-center gap-1">
+                <div className="flex items-center justify-center gap-1 text-[--text-color]">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="currentColor"

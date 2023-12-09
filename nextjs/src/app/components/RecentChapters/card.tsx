@@ -20,7 +20,8 @@ function Chapter({created_at, number, URL}: {created_at: string, number: number,
 return (
     <div className="mb-1 flex items-center justify-between text-sm">
             <a
-              className="boder-black/10 w-fit rounded-md border-[1px] bg-transparent px-3 py-1 text-center text-xs transition hover:bg-black hover:text-white dark:border-white/10 dark:text-white dark:hover:bg-white dark:hover:text-black"
+              style={{border: '1.5px solid var(--border-color)'}}
+              className="boder-black/10 w-fit rounded-md border-[1px] bg-transparent px-3 py-1 text-center text-xs transition hover:bg-[--background] hover:text-[-text-color] dark:border-white/10 dark:text-[--text-color] dark:hover:bg-[--text-color] dark:hover:text-[--background-color]"
               href={URL}
             >
               <span className="hidden sm:inline-block">Chapter</span>
@@ -48,7 +49,7 @@ export default function Card({URL, title, created_at, coverURL, description, lat
                 src={coverURL}
               />
               <div className="absolute bottom-0 p-4">
-                <p className="group-hover:hidden text-xs capitalize leading-[1rem] text-white text-opacity-60" />
+                <p className="group-hover:hidden text-xs capitalize leading-[1rem] text-[--text-color] text-opacity-60" />
                 <h2 className="text-sm font-semibold text-white group-hover:hidden">
                   {title}
                 </h2>

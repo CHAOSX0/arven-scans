@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import { Inter, Poppins } from 'next/font/google'
-import './globals.css'
+import '../../public/globals.css'
 
 const inter = Inter({ subsets: ['latin'] })
 const poppins = Poppins({weight: ['600'], subsets: ['latin']})
@@ -16,6 +16,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <head>
+      <script src="https://cdn.tiny.cloud/1/tzjei70y8jw3lstfb7ql8a902o0fatc40v99oeov25kv98aj/tinymce/6/tinymce.min.js" referrerPolicy="origin"></script>
+       
+      </head>
       <body style={{overflowX:'hidden'}} className={`${inter.className} ${poppins.className} h-[100vh] text-sm text-white` } >{children}</body>
     </html>
   )

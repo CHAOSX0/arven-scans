@@ -117,6 +117,7 @@ return (
 )
 }
 import type { Metadata, ResolvingMetadata } from 'next'
+import ChaptersComments from "./comments";
  
 type Props = {params: {seriesID: string, chapterNumber: string}}
  
@@ -154,53 +155,7 @@ export default async function({params : {seriesID, chapterNumber}}: {params: {se
         {data?.pages?.map((page, i) => (<img key={i} src={page} alt={ParentData?.title || 'hi'} className="chapter-image w-full cursor-pointer" />))}
       </div>
       <Ender data={data} ParentData={ParentData} AllChapters={AllChapters} />
-      <div className="container mx-auto mt-10 flex justify-center px-3 sm:px-0 md:px-0">
-        <div id="comments-list" className="w-full lg:w-3/4">
-          <h2 className="mb-3 block text-lg font-bold leading-[1rem]">
-            Comments (0)
-          </h2>
-          <form method="POST" action="https://iimanga.com/comments/post">
-            <input
-              type="hidden"
-              name="_token"
-              defaultValue="JxbEZZagl0avoY9Pwh14eOV0LflnwQww5zCisxh3"
-            />
-            <input
-              type="hidden"
-              name="type"
-              defaultValue="App\Models\Chapter"
-            />
-            <input type="hidden" name="key" defaultValue={228} />
-            <div className="relative">
-              <input
-                name="comment"
-                type="text"
-                className="input w-full py-4"
-                autoComplete="off"
-                placeholder="Add Comment..."
-                required
-              />
-              <button
-                className="right-4 absolute top-1/2 -translate-y-1/2"
-                type="submit"
-              >
-                <svg
-                  className="h-5 w-5 text-blue-500"
-                  fill="currentColor"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 512 512"
-                >
-                  <path d="M498.1 5.6c10.1 7 15.4 19.1 13.5 31.2l-64 416c-1.5 9.7-7.4 18.2-16 23s-18.9 5.4-28 1.6L284 427.7l-68.5 74.1c-8.9 9.7-22.9 12.9-35.2 8.1S160 493.2 160 480V396.4c0-4 1.5-7.8 4.2-10.7L331.8 202.8c5.8-6.3 5.6-16-.4-22s-15.7-6.4-22-.7L106 360.8 17.7 316.6C7.1 311.3 .3 300.7 0 288.9s5.9-22.8 16.1-28.7l448-256c10.7-6.1 23.9-5.5 34 1.4z" />
-                </svg>
-              </button>
-            </div>
-            <p className="mt-1 text-xs text-black !text-opacity-50 dark:text-white">
-              <span id="comment-char">0</span>/500 Max{" "}
-            </p>
-          </form>
-          <div className="mt-5 flex flex-col gap-4" />
-        </div>
-      </div>
+     <ChaptersComments slug={data?.id || 0}/>
     </section>
 
   </main>

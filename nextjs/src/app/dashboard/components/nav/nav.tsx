@@ -127,11 +127,11 @@ export default function DashboardNav({ currentPage }: { currentPage: string }): 
   const ContentOption = [
     {
       text: 'Series',
-      URL: '/dashboard/series'
+      URL: '/dashboard/table/series'
     },
     {
       text: 'Chapters',
-      URL: '/dashboard/chapters'
+      URL: '/dashboard/table/chapters'
     },
     {
       text: 'Comments',
@@ -143,8 +143,11 @@ export default function DashboardNav({ currentPage }: { currentPage: string }): 
     },
     {
       text: 'Types',
-      URL: '/dashboard/table/Types',
+      URL: '/dashboard/table/types',
 
+    }, {
+      text: 'statuses',
+      URL: '/dashboard/table/statuses'
     }
   ]
 

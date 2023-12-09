@@ -1,8 +1,9 @@
 "use client";
+
 import { Box } from "@mui/material"
 import Field from "../components/Field"
 import SelectMenu from "../components/SelectMenu"
-import {useState, useEffect} from 'react';
+import React, {useState, useEffect} from 'react';
 import {toast} from 'react-hot-toast'
 import Button from '@mui/material/Button';
 import SearchIcon from '@mui/icons-material/Search';
@@ -10,155 +11,127 @@ import supabase from "../../../supabase";
 import Card from "./card";
 import { useSearchParams } from 'next/navigation'
 
-export default function SeriesListForum(){
-    const searchParams = useSearchParams()
-    const genre = searchParams.get('genre')
-    const title = searchParams.get('title')
-    const [isLoading, setIsLoading] = useState<boolean>(false)
-    const [genres, setGenres] = useState<string[]>(genre ? [genre] : [] )
-    const [type, setType] = useState<string>('');
-    const [status, setStatus] = useState<string | null>(null);
-    const [GenresOptions, setGenresOptions] = useState<string[]>(['y', 'bye']);
-    const [seriesData, setSeriesData] = useState<any[]>([])
-    const cards = seriesData.map((series:any, i :number )=> <Card key={i} {...series} />)
-    console.log(cards)
-    useEffect( () => {
-      supabase.from('genres').select().then(({data, error}) => {
-        console.log(error)
-        if(error) return toast.error('error fetching genres');
-        console.log(data)
-        toast.success(data.length + ' genres fetched')
-        setGenresOptions(data.map((genre) => genre.text))
-      })
-     if(title){
-      (document.getElementById('title-input') as HTMLInputElement).value = title
-     }
-      if(genre){
-        setGenres([genre])
-      }
-      setIsLoading(true)
-      HandelSubmit().then(res=>{
-        setIsLoading(false)
-      }).catch(res=>{
-        setIsLoading(false)
-      })
-      
-      }, []);
-     
-    async function HandelSubmit(t1?: string){
-      const title = t1? t1: (document.getElementById('title-input') as HTMLInputElement).value
-      const match = {...(type ?{type:type} : {}), ...(status ? {status: status} : {})};
-      if(title){
-        if(genres){
-            const { data, error } = await supabase 
-            .from('series') 
-            .select('title, coverURL, genres, URL, slug')
-            .textSearch('title', `${title}`, {  config: 'english'})
-            .match(match).contains('genres', genres).limit(30)
-         if(error) return console.warn(error)
-          console.log(data)
-          setSeriesData(data)
-        }else{
-            const { data, error } = await supabase 
-            .from('series') 
-            .select('title, coverURL, genres, URL, slug')
-            .textSearch('title', `${title}`, {  config: 'english'})
-            .match(match).limit(30)
-         if(error) return console.warn(error)
-          console.log(data)
-          setSeriesData(data)
-        }
-      
-      }else{
-        console.log(match)
-        if(genres){
-            const {data, error} = await supabase.from('series').select('title, coverURL, genres, URL, slug').match(match).contains('genres', genres).limit(30)
-            if(error) return console.warn(error)
-            console.log(data)
-            setSeriesData(data)
-        }else{
-            const {data, error} = await supabase.from('series').select('title, coverURL, genres, URL, slug').match(match).contains('genres', genres).limit(30)
-            if(error) return console.warn(error)
-            console.log(data)
-            setSeriesData(data)
-        }
-        
-      }
-      
-
-    }
-    return(
-        <>
-           <Box
-           component="form"
-      onSubmit={(e) => {
-        e.preventDefault()
-        HandelSubmit().then(() => {
-          setIsLoading(false)
-        })
-        console.log('submit')
-        e.preventDefault()
-      }}
-      sx={{
-        maxWidth: 900,
-        margin: '0 auto',
-        '& > :not(style)': { m: 1, width: '25ch' },
-      }}
-      className='w-full p-8 bg-[transparent] ] flex-col flex gap-10 justify-center items-center'
-      noValidate
-      autoComplete="off"
-           >
-             <div className="w-full " style={{height:'50px', width: '100% !important'}}>
-               <Field   InputLabelProps={{ style: { color: 'white ' } }} sx={{flexGrow:1, width:'100%'}}  className="w-full"label='Title' id="title-input" variant="outlined"/>
-             </div>
-             <div className="w-full flex" style={{width: '100% !important', justifyContent:'space-between', flexWrap:'wrap', gap:'10px'}}>
-                <div style={{flexGrow:1, minWidth:'250px'}}>
-             <SelectMenu 
-       
-          setValue={setGenres} 
-          value={genres} 
-          isMultiple={true} 
-          id="type-input" 
-          label='genres' 
-
-          options={GenresOptions} />
-           </div>
-           <div style={{flexGrow:1, minWidth:'250px'}}>
-
-           
-          <SelectMenu 
-          isMultiple={false}
-          options={['Manhua', 'Manhwa', 'Manga']}
-          setValue={setType} 
-          value={type}
-          id="type-input" 
-          label='Type' 
-          />
-          </div>
-          <div style={{flexGrow:1, minWidth:'250px'}}>
-
-        
-           <SelectMenu 
-          isMultiple={false}
-         options={['Ongoing', 'Completed', 'Hiatus', 'Dropped']}
-          setValue={setStatus} 
-          value={status}
-          id="status-input" 
-          label='Status' 
-
-          />
+type options = {
+  text: string,
+  slug: string,
+}[]
+function GenreOption({text, slug, isChecked}: {text: string, slug: string, isChecked: boolean}){
+  return (
+    <div className="flex items-center gap-2">
+              <label className="cursor-pointer text-[--text-color]" htmlFor={slug}>
+                {text}
+              </label>
+              <input
+              defaultChecked={isChecked}
+             
+              style={{border:"1.5px solid var(--border-color)"}}
+                id={slug}
+                type="checkbox"
+                name="genre[]"
+                defaultValue={slug}
+                className="input"
+              />
             </div>
-             </div>
-             <Button className='flex gap-2  rounded-lg' type='submit' sx={{ fontFamily: 'Poppins', textTransform: 'none', width:'100px' }} variant='contained'>
-                <SearchIcon />
-               Search
-        </Button>
-           </Box>
-           <h2 className="mb-3 text-lg font-bold">Mangas List</h2>
-  <div className="xlg:grid-cols-8 grid grid-cols-3 gap-[10px] sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6">
-    {cards}
-   
-  </div>
-           </>
+  )
+}
+function Option({value, text}:{value: string, text: string}){
+  return (
+    <option style={{border:"1.5px solid var(--border-color)"}} className="bg-[var(--background)] focus:bg-[var(--background)]" value={value}>{text}</option>
+  )
+}
+export default function SeriesListForum({statusesOptions, typesOptions, genresOptions, Submit, genre}: {statusesOptions: options, typesOptions: options, genresOptions: options, Submit: (e: React.SyntheticEvent<Element, Event>) => Promise<void>, genre: string | null} ){
+    const statusesOptionsElements = statusesOptions.map((O, i)=>(<Option text={O.text} value={O.slug} key={i}/>));
+    const genresOptionsElements = genresOptions.map((O, i)=>(<GenreOption isChecked={O.slug == genre}  {...O} key={i}/>));
+    const typesOptionsElements = typesOptions.map((O, i)=>(<Option text={O.text} value={O.slug} key={i}/>));
+    const [isLoading, setIsLoading] = useState<boolean>(false)
+    return(
+      <form className="mb-4" onSubmit={(e)=>{
+         if(isLoading) return;
+         Submit(e).then(()=>{
+             setIsLoading(false)
+         }).catch(()=>{
+          setIsLoading(false)
+      })
+      }}>
+      <div className="mb-2 flex sm:mb-4">
+        <div className="mb-4 w-full md:mb-0 md:w-full">
+          <div className="flex w-full flex-col gap-3">
+            <label
+              className="text-sm font-medium cursor-pointer max-w-fit text-[--text-color]"
+              htmlFor="title"
+            >
+              Title
+            </label>
+            <input
+              style={{backgroundColor:'transparent', border:"1.5px solid var(--border-color)", color:'white'}}
+              id="title"
+              name="title"
+              type="text"
+              className="input bg-[transparent] py-2 px-2 !focus:outline-none border rounded-lg"
+              autoComplete="off"
+              placeholder="Search for content..."
+            />
+          </div>
+        </div>
+      </div>
+      <div className="flex flex-col gap-2 md:flex-row">
+        <div className="flex w-full gap-3">
+          <div className="mb-4 w-full md:mb-0">
+            <div className="flex flex-col gap-3">
+              <label
+                className="text-sm font-medium cursor-pointer max-w-fit text-[--text-color]"
+                htmlFor="type"
+              >
+                Type
+              </label>
+              <select style={{border:"1.5px solid var(--border-color)"}} id="type" className="input bg-[transparent] py-2 px-2 !focus:outline-none border rounded-lg" name="type">
+                <option value=""  className="bg-[var(--background)] focus:bg-[var(--background)]" >All Types</option>
+                {typesOptionsElements}
+              </select>
+            </div>
+          </div>
+          <div className="mb-4 w-full md:mb-0">
+            <div className="flex flex-col gap-3">
+              <label
+                className="text-sm font-medium cursor-pointer max-w-fit text-[--text-color]"
+                htmlFor="status"
+              >
+                Status
+              </label>
+              <select style={{border:"1.5px solid var(--border-color)"}} id="status" className="input bg-[transparent] py-2 px-2 focus:outline-none border rounded-lg" name="status">
+                <option value=""  className="bg-[var(--background)] focus:bg-[var(--background)]" >All Status</option>
+               {statusesOptionsElements}
+              </select>
+            </div>
+          </div>
+        </div>
+        <div className="mt-1 w-full md:w-1/2">
+          <label className="text-sm font-medium cursor-pointer max-w-fit mb-3 block text-[--text-color]">
+            Genres
+          </label>
+          <div className="grid max-h-[200px] grid-cols-2 justify-between gap-2 overflow-x-auto px-2 py-0">
+            {genresOptionsElements}
+         </div>
+        </div>
+      </div>
+      <div className="mt-3 flex justify-end">
+        <button
+          type="submit"
+          className="flex gap-3 items-center justify-center relative font-semibold px-4 py-3 bg-white text-black rounded-md duration-200 transition-all shadow-sm border-[1px] border-black/10 hover:border-white/20 hover:bg-black hover:text-white disabled:cursor-not-allowed"
+        >
+          <span id="btn-text">Search</span>
+          <span
+            id="btn-loader"
+
+            className="hidden h-5 w-5 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
+            role="status"
+          >
+            <span className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">
+              Loading...
+            </span>
+          </span>
+        </button>
+      </div>
+    </form>
     )
 }

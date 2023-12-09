@@ -66,7 +66,7 @@ const cards = data.map((series, i) => <Card key={i} {...series} i={i} />)
 return (
     <section style={{marginTop:'-5px'}}>
     <div className="flex items-center justify-between">
-      <h2 className="my-3 text-lg font-bold">{headerText}</h2>
+      <h2 style={{color: 'var(--text-color)'}} className="my-3 text-lg font-bold">{headerText}</h2>
       <Link href="/SeriesList">
         <span className="text-xs text-gray-400 transition hover:text-gray-300">
           View More

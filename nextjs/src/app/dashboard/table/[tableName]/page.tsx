@@ -11,17 +11,22 @@ import Modal from "./modal";
 import toast from "react-hot-toast";
 import Search from "@mui/icons-material/Search";
 async function getPage(pageNum: number, pageSize: number, tableName: string, query?: string) {
-  type objectType = {'comments': 'text', 'series': string, 'genres': string, 'chapters': string}
+  type objectType = {'comments': 'text', 'series': string, 'genres': string, 'chapters': string, 'types': string}
   const searchCols:objectType = {
     "comments": 'text',
     "series": 'title',
     "genres": 'text',
     "chapters": 'seriesSlug',
+    "types": 'slug',
   }
   if(query ){
-  
-  const { data, error } = await supabase.from(tableName).select('*').textSearch(`${searchCols[`${tableName as keyof objectType }`] as any || 'title'}`, query).range((pageNum - 1) * pageSize, (pageNum * pageSize) - 1)
+  const queryCol =searchCols[`${tableName as keyof objectType }`] as any || 'title'
+  console.log(queryCol,searchCols[`${tableName as keyof objectType }`] as any, 'wtf' )
+  console.log(tableName)
+  console.log(queryCol)
+  const { data, error } = await supabase.from(tableName).select('*').textSearch(`${queryCol}`, query).range((pageNum - 1) * pageSize, (pageNum * pageSize) - 1)
   if (error) notFound();
+  console.log(data, data)
   return data
   }
 
@@ -32,12 +37,13 @@ async function getPage(pageNum: number, pageSize: number, tableName: string, que
 
 //this is needed for pagination
 async function getRowsNumber(tableName: string, query?: string): Promise<number> {
-  type objectType = {'comments': 'text', 'series': string, 'genres': string, 'chapters': string}
+  type objectType = {'comments': 'text', 'series': string, 'genres': string, 'chapters': string, "types": string}
   const searchCols:objectType = {
     "comments": 'text',
     "series": 'title',
-    "genres": 'text',
+    "genres": 'text', 
     "chapters": 'seriesSlug',
+    "types": 'slug',
   }
   if(query ){
     const { count, error } = await supabase.from(tableName).select('*', { count: 'exact', head: false }).textSearch(`${searchCols[`${tableName as keyof objectType }`] as any || 'title'}`, query)
@@ -50,8 +56,10 @@ async function getRowsNumber(tableName: string, query?: string): Promise<number>
   return count || 0
 }
 
-export default function dynamicTableDashboard({ params: { tableName }}: { params: { tableName: string }, searchParams: { page: string } }) {
+export default function DynamicTableDashboard({ params: { tableName: table }}: { params: { tableName: string }, searchParams: { page: string } }) {
+  const tableName = table.toLowerCase()
   const searchParams = useSearchParams()
+  console.log(tableName)
   const page = searchParams.get('page')
   const filter = searchParams.get('filter') || undefined
   const router = useRouter()
@@ -76,13 +84,14 @@ export default function dynamicTableDashboard({ params: { tableName }}: { params
      })
 
     getPage(pageNum, PAGE_SIZE, tableName, filter).then(res => {
+      console.log(res)
       setData(res)
     })
     getRowsNumber(tableName, filter).then(res => {
       setRowNumber(res)
     })
   }, [])
-  const omittedColumns = ['author', 'authorAvatar', 'time', 'pages', 'view', 'coverURL', 'BannerURL', 'URL']
+  const omittedColumns = ['author', 'authorAvatar', 'time', 'pages', 'view', 'coverURL', 'BannerURL', 'URL', 'genres', 'isSlider', 'is_visible', 'artist', 'ratting', 'updated_at', 'viewCount', 'alternativeTitles']
   const columns = Object.keys(data?.[0] || {}).filter(e => !omittedColumns.includes(e))
   const [ModalPrompts, setModalPrompts] = useState<{ onDelete: () => void, links: { text: string, href: string }[], isOpen: boolean, position:{left: number, top: number}, lastClicked: number}>({
     onDelete: (() => { }),
@@ -97,13 +106,19 @@ export default function dynamicTableDashboard({ params: { tableName }}: { params
  function toggleModal(tableName: string, left: number, top: number, id: number, slug: string){
   //$ this is just config
   const seriesLinks = [
-   {href: `/dashboard/chapters?series=${slug}`, text:'Chapters'},
-   {href: `/dashboard/chapters/add?series=${slug}`, text: 'New Chapter'},
+   {href: `/dashboard/table/chapters?series=${slug}`, text:'Chapters'},
+   {href: `/dashboard/table/chapters/add?series=${slug}`, text: 'New Chapter'},
    {text:'bul; upload', href:`/dashboard/chapters/bulkCreate?series=${id}`},
-   {text: 'Edit', href:`/dashboard/series/edit/${id}`}]
-
+   {text: 'Edit', href:`/dashboard/table/series/edit/${id}`}]
+ const chapterLinks = [
+  {
+   href: `/dashboard/table/${tableName}/edit/${id}`,
+   text: 'edit'
+  }
+ ]
    const is_series_table = tableName == 'series'
-   const links = is_series_table? seriesLinks : []
+   const is_chapter_table = tableName == 'chapters'
+   const links = is_series_table? seriesLinks :  is_chapter_table? chapterLinks : chapterLinks
 
    async function OnDelete (){
     const promise = supabase.from(tableName).delete().eq('id', id)
@@ -127,11 +142,15 @@ export default function dynamicTableDashboard({ params: { tableName }}: { params
      setRowNumber((prev: number)=>prev-1)
     }
   }
+
    setModalPrompts(prev=>{
     const isOpen = (prev.lastClicked == id? !prev.isOpen : true)
     return ({links: links, position: {left: left, top: top}, isOpen, onDelete:OnDelete, lastClicked:id })
   })
 
+}
+function onModalBlur(){
+  setModalPrompts(prev=>({...prev, isOpen: false}))
 }
   const canADD = tableName != 'comments'
   async function on_filter_input_change() {
@@ -181,7 +200,7 @@ export default function dynamicTableDashboard({ params: { tableName }}: { params
           </div>
         </section>
       </main>
-      <Modal links={ModalPrompts.links} isOpen={ModalPrompts.isOpen} onDelete={ModalPrompts.onDelete} position={ModalPrompts.position} />
+      <Modal links={ModalPrompts.links} isOpen={ModalPrompts.isOpen} onDelete={ModalPrompts.onDelete} position={ModalPrompts.position} onBlur={onModalBlur}/>
     </div>
   )
 }

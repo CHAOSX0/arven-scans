@@ -9,7 +9,7 @@ export default function SwitchContainer({seriesID}: {seriesID: string}){
     const [isComments, setIsComments ]= useState<boolean>(false)
     return (
         <>
-        <div className="-mb-3 mt-4 flex gap-3">
+        <div className="-mb-3 mt-4 flex gap-3 text-[--text-color]">
         <button id="showChapters" className="tab-active px-3 py-3" onClick={()=>{setIsComments(false)}}>
           Chapters 
         </button>

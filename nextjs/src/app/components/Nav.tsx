@@ -8,8 +8,20 @@ export default function Nav() {
     const [isAdmin, setIsAdmin] = useState<boolean>(false)
     const [isDropDownOpen, setIsDropDownOpen] = useState<boolean>(true)
     const [isSearchOpen, setIsSearchOpen] = useState<boolean>(false)
+    const [isDark, setIsDark] = useState<boolean>(true)
     const router = useRouter()
+    document.documentElement.style.setProperty(`--background`, !isDark ? 'white' : 'black' ); //suffix may be px or ''
+    document.documentElement.style.setProperty(`--text-color`, !isDark ? 'black' : 'white' ); //suffix may be px or ''
+    document.documentElement.style.setProperty(`--border-color`, !isDark ? '#0000001a' : 'rgba(255, 255, 255, 0.15)' ); 
     useEffect(()=>{
+      const isDark = localStorage.getItem('dark') == 'true'
+      if (localStorage.getItem('dark') === 'true' || (!('dark' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark');
+    } else {
+        document.documentElement.classList.remove('dark')
+    }
+      console.log(isDark, 'isDark \n\n\n\n\n\n\n')
+      setIsDark(isDark)
         supabase.auth.getUser().then(session=>{
           setUser(session.data.user)
           supabase.auth.getSession().then(res=>{
@@ -37,19 +49,19 @@ export default function Nav() {
     >
         <nav className="flex items-center justify-between py-6">
         <div className="flex h-0 items-center gap-4">
-          <Link href="/" className="py-2 font-bold">
+          <Link href="/" className="py-2 font-bold text-[--text-color]">
            Home
           </Link>
           <div className="hidden items-center gap-1 sm:flex">
             <Link
               href="/SeriesList"
-              className="nav-link text-sm p-2 hover:bg-black/10 hover:rounded-sm flex gap-2 items-center transition hover:!bg-black/80"
+              className="text-[--text-color] nav-link text-sm p-2 hover:bg-black/10 hover:rounded-sm flex gap-2 items-center transition hover:!bg-black/80"
             >
               <span>Series</span>
             </Link>
             <Link
               href="/favorite"
-              className="nav-link text-sm p-2 hover:bg-black/10 hover:rounded-sm flex gap-2 items-center transition hover:!bg-black/80"
+              className=" text-[--text-color] nav-link text-sm p-2 hover:bg-black/10 hover:rounded-sm flex gap-2 items-center transition hover:!bg-black/80"
             >
               <svg
                 className="text-red-500 h-4 w-4"
@@ -74,7 +86,7 @@ export default function Nav() {
                 viewBox="0 0 24 24"
                 strokeWidth="1.5"
                 stroke="currentColor"
-                className="h-3 w-3 h-5 w-5 transition hover:text-blue-500"
+                className="text-[--text-color] h-3 w-3 h-5 w-5 transition hover:text-blue-500 "
               >
                 <path
                   strokeLinecap="round"
@@ -85,24 +97,33 @@ export default function Nav() {
             </a>
            
             <div
+            onClick={()=>{
+              
+              document.documentElement.style.setProperty(`--background`, isDark ? 'white' : 'black' ); //suffix may be px or ''
+              document.documentElement.style.setProperty(`--text-color`, isDark ? 'black' : 'white' ); //suffix may be px or ''
+              document.documentElement.style.setProperty(`--border-color`, isDark ? '#0000001a' : 'rgba(255, 255, 255, 0.15)' ); //suffix may be px or ''
+              localStorage.setItem('dark', JSON.stringify(!isDark))
+              setIsDark(prev=>!prev)
+             
+            }}
               className="cursor-pointer"
               data-toggle="dark"
               aria-label="Dark Mode"
             >
-              <svg
+             {!isDark ? (<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="w-6 h-6 transition hover:text-gray-600 text-[--text-color]"><path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z"></path></svg>) : (<svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
                 strokeWidth="1.5"
                 stroke="currentColor"
-                className="w-6 h-6 transition text-white hover:text-yellow-300"
+                className="w-6 h-6 transition text-[--text-color] hover:text-yellow-300"
               >
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z"
                 />
-              </svg>
+              </svg>)}
             </div>
           </div>
           <div
@@ -119,19 +140,19 @@ export default function Nav() {
               src={user?.user_metadata.avatar ? `https://uuckqeakqoiezqehbitr.supabase.co/storage/v1/object/public/avatars/${user?.user_metadata.avatar}`: '/no-image.jpg'}
             />
           </div>
-          <div className={`${isDropDownOpen ? 'hidden' : ''} dropdown-menu absolute right-0 top-10 z-20  min-w-[200px] max-w-fit rounded-md border-[1px] border-black/10 bg-white p-2 text-sm dark:border-white/10 dark:bg-[#09090b]`}>
+          <div style={{border:'2px solid var(--border-color)'}} className={`${isDropDownOpen ? 'hidden' : ''} dropdown-menu absolute right-0 top-10 z-20  min-w-[200px] max-w-fit rounded-md border-[1px] border-black/10 bg-white p-2 text-sm dark:border-white/10 !bg-[--background]`}>
             <div className="flex flex-col px-0 pt-0">
               {!user && (
                 <>
                   <Link
-                  className="cursor-pointer py-1 sm:px-2 w-full sm:hover:rounded-sm sm:hover:bg-black/10 sm:dark:hover:bg-white/10 duration-200 transition-colors"
+                  className="cursor-pointer py-1 sm:px-2 w-full sm:hover:rounded-sm sm:hover:bg-black/10 sm:dark:hover:bg-white/10 duration-200 transition-colors !text-[--text-color]"
                   href="/signup"
                 >
                   {" "}
                   Register{" "}
                 </Link>
                 <Link
-                  className="cursor-pointer py-1 sm:px-2 w-full sm:hover:rounded-sm sm:hover:bg-black/10 sm:dark:hover:bg-white/10 duration-200 transition-colors"
+                  className="cursor-pointer py-1 sm:px-2 w-full sm:hover:rounded-sm sm:hover:bg-black/10 sm:dark:hover:bg-white/10 duration-200 transition-colors !text-[--text-color]"
                   href="/login"
                 >
                   {" "}
@@ -142,7 +163,7 @@ export default function Nav() {
               {user && (
               <>
                  <div
-                 className="cursor-pointer py-1 sm:px-2 w-full sm:hover:rounded-sm sm:hover:bg-black/10 sm:dark:hover:bg-white/10 duration-200 transition-colors"
+                 className="cursor-pointer py-1 sm:px-2 w-full sm:hover:rounded-sm sm:hover:bg-black/10 sm:dark:hover:bg-white/10 duration-200 transition-colors !text-[--text-color]"
                  onClick={()=>{
                   supabase.auth.signOut()
                  }}
@@ -150,15 +171,15 @@ export default function Nav() {
                  Logout
                </div>
                <Link
-                 className="cursor-pointer py-1 sm:px-2 w-full sm:hover:rounded-sm sm:hover:bg-black/10 sm:dark:hover:bg-white/10 duration-200 transition-colors"
+                 className="cursor-pointer py-1 sm:px-2 w-full sm:hover:rounded-sm sm:hover:bg-black/10 sm:dark:hover:bg-white/10 duration-200 transition-colors !text-[--text-color]"
                  href='/userSettings'
                >
                 user Settings
                </Link>
                {isAdmin && (
                 <Link
-                className="cursor-pointer py-1 sm:px-2 w-full sm:hover:rounded-sm sm:hover:bg-black/10 sm:dark:hover:bg-white/10 duration-200 transition-colors"
-                href="/dashboard/series"
+                className="cursor-pointer py-1 sm:px-2 w-full sm:hover:rounded-sm sm:hover:bg-black/10 sm:dark:hover:bg-white/10 duration-200 transition-colors !text-[--text-color]"
+                href="/dashboard/"
               >
                 Dashboard
               </Link>

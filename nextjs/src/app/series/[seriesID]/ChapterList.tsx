@@ -9,7 +9,7 @@ return data;
 function Chapter({number, seriesSlug, created_at}: chapter){
     return (
         <Link href={`/series/${seriesSlug}/${number}`}>
-        <div className="group mb-2 flex flex-wrap justify-between rounded-md border-[1px] border-black/10 bg-transparent p-3 transition dark:border-white/10 dark:hover:bg-white dark:hover:text-black">
+        <div className="group mb-2 flex flex-wrap justify-between rounded-md border-[1px] border-black/10 bg-transparent p-3 transition dark:border-white/10 dark:hover:bg-white dark:hover:text-black text-[--text-color]">
           <div className="flex gap-2">
             <span>Chapter {number}</span>
           </div>
@@ -27,7 +27,7 @@ console.log(chaptersData)
 chaptersData?.sort((a, b) => b.number - a.number)
 const chapters = chaptersData ? chaptersData.map((chapter: chapter, i:number) => <Chapter key={i} {...chapter} /> ): "No Chapters Found";
 return (
-    <div className="mt-3 block lg:flex lg:gap-5">
+    <div className="mt-3 block lg:flex lg:gap-5 text-[--text-color]">
     <div id="chapters-list" className="w-full lg:w-3/4">
       <h2 className="mb-3 block text-lg font-bold leading-[1rem]">
         Chapters List
@@ -36,7 +36,7 @@ return (
       <div className="mt-5 flex justify-end" />
     </div>
     <div id="comments-list" className="hidden w-full lg:w-3/4">
-      <h2 className="mb-3 block text-lg font-bold leading-[1rem]">
+      <h2 className="mb-3 block text-lg font-bold leading-[1rem] text-[--text-color]">
         Comments (0)
       </h2>
       <form method="POST" action="https://iimanga.com/comments/post">
@@ -81,7 +81,7 @@ return (
       <div className="mt-5 flex flex-col gap-4" />
     </div>
     <div className="hidden lg:block lg:w-1/4">
-      <p className="mb-3 block text-lg font-bold leading-[1rem]">
+      <p className="mb-3 block text-lg font-bold leading-[1rem] text-[--text-color]">
         Uploader
       </p>
       <div className="flex gap-3">
@@ -91,8 +91,8 @@ return (
           src="https://iimanga.com/storage/avatars/64e3c6940aca5.webp"
         />
         <div>
-          <p className="text-base font-bold">admin</p>
-          <p className="text-xs font-medium leading-4 text-gray-400">
+          <p className="text-base font-bold text-[--text-color]">admin</p>
+          <p className="text-xs font-medium leading-4 text-gray-400 text-[--text-color]">
             Admin description
           </p>
         </div>

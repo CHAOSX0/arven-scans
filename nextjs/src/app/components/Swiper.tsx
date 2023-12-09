@@ -16,7 +16,8 @@ function SLide({BannerURL, title, description, genres, type, URL, index}: banner
     return (
       <a
       href={`/SeriesList?genre=${text}`}
-      className="inline-block rounded-md border-[1px] border-white/10 bg-white px-2 py-1 text-xs font-light text-black shadow-sm transition hover:bg-black hover:text-white dark:bg-black dark:text-white dark:shadow-none dark:hover:bg-white dark:hover:text-black sm:px-4 sm:py-2"
+      style={{color:'var(--text-color)', backgroundColor: 'var(--background)'}}
+      className="inline-block rounded-md border-[1px] border-white/10 bg-white px-2 py-1 text-xs font-light text-black shadow-sm transition hover:bg-[var(--text-color)] hover:text-[var(--background)] dark:bg-black dark:text-white dark:shadow-none dark:hover:bg-white dark:hover:text-black sm:px-4 sm:py-2"
     >
       {text}
     </a>
@@ -28,10 +29,10 @@ function SLide({BannerURL, title, description, genres, type, URL, index}: banner
   style={{width:'100%', display: 'block'}}
   class="swiper-slide"
 >
-  <figure className="relative" style={{overflow:'hidden', height:'100%'}}>
-    <div style={{paddingBottom: '10px'}} className="absolute -bottom-[10px] left-0 h-1/2 w-full bg-gradient-to-b from-transparent to-white transition dark:to-[#121212]" />
+  <figure className="relative" style={{overflow:'hidden', height:'100%', maxHeight:'100vh'}}>
+    <div style={{paddingBottom: '10px'}} className=" slider-shadow absolute -bottom-[10px] left-0 h-1/2 w-full bg-gradient-to-b from-transparent to-white transition dark:to-[var(--background)]" />
     <img
-       style={{objectFit:'cover', width:'100%'}}
+       style={{objectFit:'cover', width:'100%', height:'100%'}}
       className="min-h-[45vh] w-full object-cover md:h-[75vh] lazyloaded"
       data-src={BannerURL}
       alt={title}

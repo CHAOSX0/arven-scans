@@ -1,6 +1,6 @@
 import seriesData from "../types/series"
 
-export default function Card({title, URL, type, coverURL}: seriesData){
+export default function Card({title, URL, type, coverURL}:{title: string, URL: string, type: string, coverURL: string}){
 
     return (
         <div className="rounded-lg">

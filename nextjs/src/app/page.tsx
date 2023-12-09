@@ -31,7 +31,7 @@ async function getBanners(n: number): Promise<bannerData[]>{
   }
   const data = await res.json()
   const ret = data.map((e: any)=>{
-    return {...e, genres: e.genres.map((g:any)=>({text: g, URL:`/genre/${g}`, id: g}))}
+    return {...e, genres: e?.genres?.map((g:any)=>({text: g, URL:`/genre/${g}`, id: g}))}
   })
   return ret
 //  return await res.json()

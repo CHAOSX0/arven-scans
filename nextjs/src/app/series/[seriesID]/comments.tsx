@@ -57,19 +57,20 @@ function Comment({author, text, time, votes, id, authorAvatar, authorUsername}: 
         <div className="flex flex-col gap-4">
         <div className="flex gap-3">
           <img
+            
             className="h-10 w-10 rounded-full border-[1px] border-solid border-black/5 object-cover object-top dark:border-none"
             src={`https://uuckqeakqoiezqehbitr.supabase.co/storage/v1/object/public/avatars/${authorAvatar}` || '/no-image.jpg'}
             alt="admin"
           />
           <div className="flex w-full flex-col gap-2">
-            <div className="flex w-full flex-col gap-2 rounded-md border-[1px] border-black/10 px-5 py-3 pb-4 dark:border-white/10">
+            <div style={{border:'2px solid var(--border-color)'}} className="flex w-full flex-col gap-2 rounded-md border-[1px] border-black/10 px-5 py-3 pb-4 dark:border-white/10">
               <div className="flex gap-1 items-baseline">
-                <h3 className="font-bold">{authorUsername}</h3>
-                <span className="text-black dark:dark:text-white !text-opacity-60 text-xs">
+                <h3 className="font-bold text-[--text-color]">{authorUsername}</h3>
+                <span className="text-black dark:dark:text-white !text-opacity-60 text-xs !text-[--text-color]">
                   {timeAgo(time)}
                 </span>
               </div>
-              <p className="text-sm">{text}</p>
+              <p className="text-sm  text-[--text-color]">{text}</p>
             </div>
             <div className="flex items-baseline gap-3">
               <form
@@ -96,7 +97,7 @@ function Comment({author, text, time, votes, id, authorAvatar, authorUsername}: 
                       strokeWidth={2}
                       viewBox="0 0 24 24"
                       xmlns="http://www.w3.org/2000/svg"
-                      className="h-3 w-3 h-4 w-4 hover:fill-black dark:hover:fill-white"
+                      className="h-3 w-3 h-4 w-4 hover:fill-black dark:hover:fill-white fill-[--text-color]"
                       id="like-btn"
                     >
                       <path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3" />
@@ -127,7 +128,7 @@ function Comment({author, text, time, votes, id, authorAvatar, authorUsername}: 
                     strokeWidth={2}
                     viewBox="0 0 24 24"
                     xmlns="http://www.w3.org/2000/svg"
-                    className="h-3 w-3 h-4 w-4 hover:fill-black dark:hover:fill-white"
+                    className="h-3 w-3 h-4 w-4 hover:fill-black dark:hover:fill-white fill-[--text-color]"
                     id="dislike-btn"
                   >
                     <path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17" />
@@ -135,7 +136,7 @@ function Comment({author, text, time, votes, id, authorAvatar, authorUsername}: 
                 </button>
               </form>
               <span
-                className="text-sm text-black dark:text-white"
+                className="text-sm text-black dark:text-white !text-[--text-color]"
                 id="total-likes"
               >
                 {Votes}
@@ -214,7 +215,8 @@ export default function SeriesComments({slug}: {slug: string}){
         name="comment"
         type="text"
         id="comment-input"
-        className="input w-full py-4 focus:outline-none bg-[transparent]"
+        style={{border: '1.5px solid var(--border-color)'}}
+        className="input w-full p-4 focus:outline-none bg-[transparent] text-[--text-color] rounded-lg"
         autoComplete="off"
         placeholder="Add Comment..."
         value={formText}
@@ -240,8 +242,8 @@ export default function SeriesComments({slug}: {slug: string}){
         </svg>
       </button>
     </div>
-    <p className="mt-1 text-xs text-black !text-opacity-50 dark:text-white">
-      <span id="comment-char">{formSize}</span>/500 Max{" "}
+    <p className="mt-1 text-xs text-black !text-opacity-50 dark:text-white ">
+      <span id="comment-char"  className="text-[--text-color]">{formSize}</span > <span  className="text-[--text-color]">/500 Max</span>{" "}
     </p>
   </form>
   <div className="mt-5 flex flex-col gap-4">

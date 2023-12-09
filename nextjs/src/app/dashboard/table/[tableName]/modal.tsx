@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react"
 import Link from "next/link"
+import toast from "react-hot-toast";
 
 function LinkElement({href, text}: {href: string, text: string}){
     return (
@@ -12,12 +13,12 @@ function LinkElement({href, text}: {href: string, text: string}){
         </Link>
     )
 }
-export default function Modal({onDelete, links, isOpen, position}: {onDelete:Function, links: {text:string, href: string}[], isOpen: boolean,position: {left: number, top: number}}){
+export default function Modal({onDelete, links, isOpen, position, onBlur}: {onDelete:Function, links: {text:string, href: string}[], isOpen: boolean,position: {left: number, top: number}, onBlur: ()=>void}){
     const [isLoading, setIsLoading] = useState<boolean>(false)
     
     const LinksElements = links.map((l: {text: string, href: string}, i: number)=><LinkElement href={l.href} text={l.text}></LinkElement>)
     return (
-        <div className={`dropdown-menu absolute top-[${position.top}px]  left-[${position.left}px] z-20  min-w-[200px] max-w-fit rounded-md border-[1px] border-black/10 bg-white p-2 text-sm dark:border-white/10 dark:bg-[#09090b] ${isOpen ? '':  'hidden' }`} style={{top:position.top, left: position.left -200}}>
+        <div  className={`dropdown-menu absolute top-[${position.top}px]  left-[${position.left}px] z-20  min-w-[200px] max-w-fit rounded-md border-[1px] border-black/10 bg-white p-2 text-sm dark:border-white/10 dark:bg-[#09090b] ${isOpen ? '':  'hidden' }`} style={{top:position.top, left: position.left -200}}>
         <div className="flex flex-col px-0 pt-0">
          
           <a
