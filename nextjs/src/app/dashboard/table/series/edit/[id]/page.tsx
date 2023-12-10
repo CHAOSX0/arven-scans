@@ -7,7 +7,7 @@ import Link from "next/link";
 import SelectMenu from "./selectMenu";
 import supabase from '../../../../../../../supabase';
 import toast from 'react-hot-toast';
-import { notFound } from 'next/navigation';
+import { notFound, useRouter } from 'next/navigation';
 import Image from 'next/image';
 export default function SeriesEdit({params: {id}}:{params: {id: string}}) {
   const editorRef = useRef<any>(null);
@@ -19,7 +19,21 @@ export default function SeriesEdit({params: {id}}:{params: {id: string}}) {
   const [Description, setDescription] = useState<string>('')
   const [selectedGenres, setSelectedGenres] = useState<any>([])
   const [preloadedCovers, setPreloadedCovers] = useState<{cover: string, banner: string} | undefined>()
+  const router = useRouter()
   useEffect(() => {
+    supabase.auth.getSession().then(res=>{
+        if(!res.data.session){
+          router.back()
+        }
+      supabase.from('admins').select().eq('id', res.data.session?.user.id ).then((res)=>{
+        console.log(res, 'res')
+       if((res?.data?.length == 0)){
+           router.back()
+       }else{
+       
+       }
+      })
+     });
     // @ts-ignore
     (global.tinymce as any).init({
       hidden_input: true,

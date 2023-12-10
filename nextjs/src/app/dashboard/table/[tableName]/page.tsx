@@ -71,17 +71,7 @@ export default function DynamicTableDashboard({ params: { tableName: table }}: {
   const [data, setData] = useState<any[]>([])
   const [rowNumber, setRowNumber] = useState<number>(0)
   useEffect(() => {
-    supabase.auth.getSession().then(res=>{
-        
-      supabase.from('admins').select().eq('id', res.data.session?.user.id ).then((res)=>{
-        console.log(res, 'res')
-       if((res?.data?.length == 0)){
-           router.back()
-       }else{
-       
-       }
-      })
-     })
+  
 
     getPage(pageNum, PAGE_SIZE, tableName, filter).then(res => {
       console.log(res)
@@ -91,8 +81,10 @@ export default function DynamicTableDashboard({ params: { tableName: table }}: {
       setRowNumber(res)
     })
   }, [])
-  const omittedColumns = ['author', 'authorAvatar', 'time', 'pages', 'view', 'coverURL', 'BannerURL', 'URL', 'genres', 'isSlider', 'is_visible', 'artist', 'ratting', 'updated_at', 'viewCount', 'alternativeTitles']
-  const columns = Object.keys(data?.[0] || {}).filter(e => !omittedColumns.includes(e))
+  const omittedColumns = ['author', 'authorAvatar', 'time', 'pages', 'view', 'coverURL', 'BannerURL', 'URL', 'genres', 'isSlider', 'is_visible', 'artist', 'ratting', 'updated_at', 'viewCount', 'alternativeTitles', 'deleted_at', 'phone', 'last_sign_in_at', 'is_sso_user']
+  const renamedColumns = {"raw_user_meta_data": 'username'}
+  //@ts-ignore
+  const columns = Object.keys(data?.[0] || {}).filter(e => !omittedColumns.includes(e)).map(e=>(renamedColumns[e] as any ? renamedColumns[e] as any : e ))
   const [ModalPrompts, setModalPrompts] = useState<{ onDelete: () => void, links: { text: string, href: string }[], isOpen: boolean, position:{left: number, top: number}, lastClicked: number}>({
     onDelete: (() => { }),
     links: [],
@@ -106,9 +98,9 @@ export default function DynamicTableDashboard({ params: { tableName: table }}: {
  function toggleModal(tableName: string, left: number, top: number, id: number, slug: string){
   //$ this is just config
   const seriesLinks = [
-   {href: `/dashboard/table/chapters?series=${slug}`, text:'Chapters'},
+   {href: `/dashboard/table/chapters?filter=${slug}`, text:'Chapters'},
    {href: `/dashboard/table/chapters/add?series=${slug}`, text: 'New Chapter'},
-   {text:'bul; upload', href:`/dashboard/chapters/bulkCreate?series=${id}`},
+   {text:'bulk upload', href:`/dashboard/chapters/bulkCreate?series=${slug}`},
    {text: 'Edit', href:`/dashboard/table/series/edit/${id}`}]
  const chapterLinks = [
   {

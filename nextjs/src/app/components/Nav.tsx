@@ -10,9 +10,11 @@ export default function Nav() {
     const [isSearchOpen, setIsSearchOpen] = useState<boolean>(false)
     const [isDark, setIsDark] = useState<boolean>(true)
     const router = useRouter()
+    if(!(typeof window === 'undefined')){
     document.documentElement.style.setProperty(`--background`, !isDark ? 'white' : 'black' ); //suffix may be px or ''
     document.documentElement.style.setProperty(`--text-color`, !isDark ? 'black' : 'white' ); //suffix may be px or ''
     document.documentElement.style.setProperty(`--border-color`, !isDark ? '#0000001a' : 'rgba(255, 255, 255, 0.15)' ); 
+  }
     useEffect(()=>{
       const isDark = localStorage.getItem('dark') == 'true'
       if (localStorage.getItem('dark') === 'true' || (!('dark' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
@@ -23,10 +25,17 @@ export default function Nav() {
       console.log(isDark, 'isDark \n\n\n\n\n\n\n')
       setIsDark(isDark)
         supabase.auth.getUser().then(session=>{
+         
           setUser(session.data.user)
           supabase.auth.getSession().then(res=>{
-        
             supabase.from('admins').select().eq('id', res.data.session?.user.id ).then((res)=>{
+              console.log(res, 'admin')
+             if(!(res?.data?.length == 0)){
+                 setIsAdmin(true)
+                 console.log(isAdmin)
+             }
+            })
+            supabase.from('uploaders').select().eq('id', res.data.session?.user.id ).then((res)=>{
               console.log(res, 'admin')
              if(!(res?.data?.length == 0)){
                  setIsAdmin(true)

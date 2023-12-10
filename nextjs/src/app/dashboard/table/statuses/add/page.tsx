@@ -6,7 +6,7 @@ import DashboardNav from "@/app/dashboard/components/nav/nav";
 import toast from "react-hot-toast";
 import Link from "next/link";
 
-export default function statusAdd(){
+export default function StatusAdd(){
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const [formData, setFormData] = useState<{name: string, slug: string }>({name: '', slug: ''})
     //$ e is the form submit event at line: 45

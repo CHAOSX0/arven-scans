@@ -86,18 +86,7 @@ async function getLatesAddedSeriesData(n: number): Promise<seriesData[]>{
 
   return await res.json()
 }
-type Props = {
-  params: { id: string }
-  searchParams: { [key: string]: string | string[] | undefined }
-}
-export const metadata: Metadata = {
-    title: "Arven Scans Manhua, Manhwa and Manga",
-    description:'read Manhuas, Manhwas and Mangas for free on Arven Scans',
-    keywords:"Manhua Manhwa Manga anime",
-    openGraph: {
-      images: ['/logo.png',],
-    },
-  }
+
 
 export default async function Home() {
   let i = -1

@@ -5,6 +5,7 @@ import Footer from "@/app/components/footer";
 import Bookmark from "./bookmark";
 import Link from "next/link";
 import SwitchContainer from "./switchContainer";
+import supabase from "../../../../supabase";
 function Genres({ genres }: { genres: string[] }) { 
   return genres.map((genre, i) => (
     <Link
@@ -55,10 +56,14 @@ export async function generateMetadata(
   parent: ResolvingMetadata
 ): Promise<Metadata> {
   const data = await getData(params.seriesID)
+  const title =  (await supabase.from('settings').select('value').eq('name', 'site-title'))?.data?.[0].value
+  const keywords = (await supabase.from('settings').select('value').eq('name', 'site-keywords'))?.data?.[0].value
+  const titleTemplate = (await supabase.from('settings').select('value').eq('name', 'seo-manga-title'))?.data?.[0].value 
+  const descriptionTemplate = (await supabase.from('settings').select('value').eq('name', 'seo-manga-description'))?.data?.[0].value 
   return {
-    title: `${data.title} on Arven scans`,
-    description:data.description,
-    keywords:'Arven Scans, manga, manhua, manhwa, ' + data.title,
+    title: titleTemplate.replaceAll(':title', data.title),
+    description:descriptionTemplate.replaceAll(':title', data.title),
+    keywords:keywords,
     openGraph: {
       images: [data.coverURL],
     },

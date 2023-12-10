@@ -1,19 +1,42 @@
 "use client";
 
-import { useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
+import supabase from "../../../../../../supabase";
 
 
-function Field ({text, column}: {text: string, column: string}){
-    const is_timeStamp = column == 'created_at'
-return  (<td className="pl-4 py-2 text-sm font-medium">{is_timeStamp ? new Date(text).toLocaleDateString() : `${text}`}</td>)
+function Field ({text, column, id}: {text: string, column: string, id: string}){
+  const is_timeStamp = column == 'created_at'
+  
+  const [textValue, setText] = useState<string>(is_timeStamp ? new Date(text).toLocaleDateString() : `${text}`)
+    const is_role = column == 'role'
+    
+  useEffect(()=>{
+    if(is_role){
+      supabase.from('admins').select('id').eq('id', id).then(res=>{
+        if(res.data?.length){
+          setText('admin')
+          return
+        }
+        supabase.from('uploaders').select('id').eq('id', id).then(res=>{
+          if(res.data?.length){
+            setText('uploader')
+            return
+          }
+        })
+      })
+    }
+  })
+return  (<td className="pl-4 py-2 text-sm font-medium">{textValue}</td>)
 }
 export default function Row({values, id, tableName, data, onToggleModal}: {values: {key: string, prop: string}[], id: number, tableName: string, data: any, onToggleModal: (tableName: string, left: number, top: number, id: number, slug: string)=>void}){
     const [isOpen, setIsOpen] = useState<boolean>(false)
     const [top, setTop] = useState(0)
     const [left, setLeft]= useState(0)
     const buttonRef = useRef<HTMLButtonElement>(null)
-    const omittedColumns = ['author', 'authorAvatar', 'time', 'pages', 'view', 'coverURL', 'BannerURL', 'URL', 'genres', 'isSlider', 'is_visible', 'artist', 'ratting', 'updated_at', 'viewCount', 'alternativeTitles']
-    const fields = Object.keys(data).filter(c=>!omittedColumns.includes(c)).map((c, i)=> <Field text={data[c]} column={c} key={i}/>)
+    const omittedColumns = ['author', 'authorAvatar', 'time', 'pages', 'view', 'coverURL', 'BannerURL', 'URL', 'genres', 'isSlider', 'is_visible', 'artist', 'ratting', 'updated_at', 'viewCount', 'alternativeTitles', 'deleted_at', 'phone', 'last_sign_in_at', 'is_sso_user']
+    const deepColumns = {"raw_user_meta_data": 'username'}
+    //@ts-ignore
+    const fields = Object.keys(data).filter(c=>!omittedColumns.includes(c)).map(e=>e).map((c, i)=><Field id={data.id} text={deepColumns[c] ? data[c][deepColumns[c]] : data[c]} column={c} key={i}/>)
       return (
           <tr
          

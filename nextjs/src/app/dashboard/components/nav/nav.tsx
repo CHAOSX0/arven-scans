@@ -176,17 +176,31 @@ export default function DashboardNav({ currentPage }: { currentPage: string }): 
 
   const [user, setUser] = useState<any>()
   const [isDropDownOpen, setIsDropDownOpen]= useState<boolean>(false)
-  const [isAdmin, setIsAdmin] = useState<boolean>(false)
+ 
   const router = useRouter()
   useEffect(()=>{
     supabase.auth.getUser().then(session=>{
       setUser(session.data.user)
+      if(!session.data.user?.id){
+        router.back()
+        return
+      }
       supabase.auth.getSession().then(res=>{
-        supabase.from('admins').select().eq('id', res.data.session?.user.id ).then((res)=>{
-         if((res?.data?.length == 0)){
-          router.back()
+        supabase.from('admins').select().eq('id', res.data.session?.user.id ).then((reso)=>{
+         if((reso?.data?.length == 0)){
+          supabase.from('uploaders').select().eq('id', res.data.session?.user.id ).then((resn)=>{
+            if((resn?.data?.length == 0)){
+             router.back()
+             console.log('back')
+            }else{
+             console.log('aha')
+            }
+           })
+         }else{
+          console.log('aha')
          }
         })
+        
        })
       supabase.auth.onAuthStateChange((_event, session)=>{
           setUser(session?.user ?? null)
@@ -226,7 +240,7 @@ export default function DashboardNav({ currentPage }: { currentPage: string }): 
           </Link>
           <Link
             className="cursor-pointer hover:text-black dark:hover:text-white duration-200 transition-colors text-gray-500"
-            href='/dashboard/users'
+            href='/dashboard/table/users'
           >
             Users
           </Link>

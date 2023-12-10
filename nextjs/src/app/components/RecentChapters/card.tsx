@@ -24,11 +24,11 @@ return (
               className="boder-black/10 w-fit rounded-md border-[1px] bg-transparent px-3 py-1 text-center text-xs transition hover:bg-[--background] hover:text-[-text-color] dark:border-white/10 dark:text-[--text-color] dark:hover:bg-[--text-color] dark:hover:text-[--background-color]"
               href={URL}
             >
-              <span className="hidden sm:inline-block">Chapter</span>
-              <span className="sm:hidden">Chp</span>
-              <b>{number}</b>
+              <span className="hidden sm:inline-block text-[--text-color]">Chapter</span>
+              <span className="sm:hidden text-[--text-color]">Chp</span>
+              <b className='text-[--text-color]'>{number}</b>
             </a>
-            <span className="text-xs text-gray-500 dark:text-gray-300 sm:block">
+            <span className="text-xs text-gray-500 dark:text-gray-300 sm:block text-[--text-color]">
               {getTimeAgo(created_at)} ago
             </span>
           </div>

@@ -127,11 +127,13 @@ export async function generateMetadata(
 ): Promise<Metadata> {
   const data = await getData(params.seriesID, params.chapterNumber)
   const ParentData = await GetParentData(params.seriesID, params.chapterNumber)
-
+  const titleTemplate = (await supabase.from('settings').select('value').eq('name', 'seo-chapter-title'))?.data?.[0].value 
+  const descriptionTemplate =  (await supabase.from('settings').select('value').eq('name', 'seo-chapter-description'))?.data?.[0].value
+  const keywords =  (await supabase.from('settings').select('value').eq('name', 'site-keywords'))?.data?.[0].value
   return {
-    title: `chapter ${params.chapterNumber} of ${ParentData?.title} on Arven Scans`,
-    keywords: `${ParentData?.title}, chapter ${data?.number} ${ParentData?.title}, arven scans, manhua, manga`,
-    description:`chapter ${data?.number} of ${ParentData?.description} on arven scans`,
+    title: titleTemplate.replaceAll(':manga', ParentData?.title).replaceAll(':chapter', data?.number),
+    keywords: keywords,
+    description:descriptionTemplate.replaceAll(':manga', ParentData?.title).replaceAll(':chapter', data?.number),
     openGraph: {
       images: [ParentData?.coverURL || ''],
     },

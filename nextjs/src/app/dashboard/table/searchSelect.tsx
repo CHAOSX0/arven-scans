@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import Select from 'react-select'
 
 
-export default function SearchSelect({getValues, isMulti}: {getValues: ()=>Promise<{label: string, value: string}[]>, isMulti: boolean}){
+export default function SearchSelect({getValues, isMulti, defaultValue}: {getValues: ()=>Promise<{label: string, value: string}[]>, isMulti: boolean, defaultValue?: string}){
     const [options, SetOptions]= useState<{value: string, label: string}[]>([])
     const [values, setValues]= useState<{value: string, label: string}[]>([])
     useEffect(()=>{
@@ -13,7 +13,7 @@ export default function SearchSelect({getValues, isMulti}: {getValues: ()=>Promi
        })
     }, [])
     return (
-        <Select name='select'  isMulti={isMulti} options={options} styles={{
+        <Select defaultInputValue={defaultValue} name='select'  isMulti={isMulti} options={options} styles={{
            singleValue: base=>({...base, color: 'white'}),
             menu: base => ({
               ...base, zIndex: 9999, color: 'var(--text-color)', backgroundColor: 'var(--background)', "&:hover": {

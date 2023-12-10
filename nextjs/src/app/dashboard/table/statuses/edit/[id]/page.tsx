@@ -7,7 +7,7 @@ import toast from "react-hot-toast";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-export default function statusEdit({params: {id}}: {params: {id: string}}){
+export default function StatusEdit({params: {id}}: {params: {id: string}}){
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const [formData, setFormData] = useState<{name: string, slug: string }>({name: '', slug: ''})
     
