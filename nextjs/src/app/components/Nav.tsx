@@ -241,7 +241,7 @@ export default function Nav() {
       className="-mt-4 mb-4 flex flex-col gap-3 bg-blue-600 p-3 text-white sm:hidden md:hidden lg:hidden"
     >
       <div className="flex w-full flex-wrap justify-center gap-3 text-sm">
-        <a href="https://iimanga.com/manga" className="flex items-center gap-2">
+        <Link href="/SeriesList" className="flex items-center gap-2">
           <svg
             className="h-4 w-4"
             fill="currentColor"
@@ -250,8 +250,8 @@ export default function Nav() {
           >
             <path d="M40 48C26.7 48 16 58.7 16 72v48c0 13.3 10.7 24 24 24H88c13.3 0 24-10.7 24-24V72c0-13.3-10.7-24-24-24H40zM192 64c-17.7 0-32 14.3-32 32s14.3 32 32 32H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H192zm0 160c-17.7 0-32 14.3-32 32s14.3 32 32 32H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H192zm0 160c-17.7 0-32 14.3-32 32s14.3 32 32 32H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H192zM16 232v48c0 13.3 10.7 24 24 24H88c13.3 0 24-10.7 24-24V232c0-13.3-10.7-24-24-24H40c-13.3 0-24 10.7-24 24zM40 368c-13.3 0-24 10.7-24 24v48c0 13.3 10.7 24 24 24H88c13.3 0 24-10.7 24-24V392c0-13.3-10.7-24-24-24H40z" />
           </svg>
-          <span>Mangas</span>
-        </a>
+          <span>Series</span>
+        </Link>
       </div>
     </div>
      </>

@@ -18,7 +18,7 @@ export default async function Icon() {
   return new ImageResponse(
     (
       // ImageResponse JSX element
-        <img  src={data?.[0].value} width='35' height='35'  alt='hi'/>
+        <img  src={data?.[0].value} width='32' height='32'  alt='hi'/>
  
    
     ),
