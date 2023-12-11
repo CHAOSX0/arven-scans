@@ -87,6 +87,7 @@ async function getLatesAddedSeriesData(n: number): Promise<seriesData[]>{
   return await res.json()
 }
 
+export const revalidate = 60*10
 
 export default async function Home() {
   let i = -1

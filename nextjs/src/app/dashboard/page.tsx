@@ -67,6 +67,7 @@ async function getUserCount(): Promise<timeLogNumbers>{
 function getPercentage(current: number, last: number): string{
   return `${current - last >= 0 ?  '' : '-' }${Math.abs(100 - Math.round(current / last * 10000)/10000 *100 )}%`
 }
+export const revalidate = 1
 export default async function Dashboard() {
   const seriesCount: timeLogNumbers = await GetTotalTable('series')
   const chapterCount: timeLogNumbers = await GetTotalTable('chapters')
