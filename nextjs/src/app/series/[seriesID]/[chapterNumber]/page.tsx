@@ -7,6 +7,7 @@ import Image from "next/image";
 import Link from "next/link";
 import SelectChapters from "./selectChapters";
 import ViewCounter from "./viewCounter";
+import Ads from "@/app/components/ads";
 
 async function getALlChapters(seriesID: string): Promise<chapter[]>{
 const {error, data} = await supabase.from("chapters").select("*").eq("seriesSlug", seriesID)
@@ -151,12 +152,16 @@ export default async function({params : {seriesID, chapterNumber}}: {params: {se
 
   <main className="container mx-auto px-3 sm:px-0 md:px-0">
     <section className="flex flex-col items-center">
+     <Ads Type='above-images-chapter	' currentPage='Chapter' />
       <Header title={ParentData?.title} number={data?.number} URL={ParentData?.URL} />
       <Ender  data={data} ParentData={ParentData} AllChapters={AllChapters}/>
+
       <div className="mx-auto max-w-3xl" id="chapter-container">
         {data?.pages?.map((page, i) => (<img key={i} src={page} alt={ParentData?.title || 'hi'} className="chapter-image w-full cursor-pointer" />))}
       </div>
       <Ender data={data} ParentData={ParentData} AllChapters={AllChapters} />
+     <Ads Type='below-images-chapter' currentPage='Chapter' />
+
      <ChaptersComments slug={data?.id || 0}/>
     </section>
 

@@ -39,7 +39,7 @@ function Option({value, text}:{value: string, text: string}){
     <option style={{border:"1.5px solid var(--border-color)"}} className="bg-[var(--background)] focus:bg-[var(--background)]" value={value}>{text}</option>
   )
 }
-export default function SeriesListForum({statusesOptions, typesOptions, genresOptions, Submit, genre}: {statusesOptions: options, typesOptions: options, genresOptions: options, Submit: (e: React.SyntheticEvent<Element, Event>) => Promise<void>, genre: string | null} ){
+export default function SeriesListForum({statusesOptions, typesOptions, genresOptions, Submit, genre, status,title, type}: {statusesOptions: options, typesOptions: options, genresOptions: options, Submit: (e: React.SyntheticEvent<Element, Event>) => Promise<void>, genre: string | null, status: string | null, title: string | null, type: string | null} ){
     const statusesOptionsElements = statusesOptions.map((O, i)=>(<Option text={O.text} value={O.slug} key={i}/>));
     const genresOptionsElements = genresOptions.map((O, i)=>(<GenreOption isChecked={O.slug == genre}  {...O} key={i}/>));
     const typesOptionsElements = typesOptions.map((O, i)=>(<Option text={O.text} value={O.slug} key={i}/>));
@@ -66,6 +66,7 @@ export default function SeriesListForum({statusesOptions, typesOptions, genresOp
               style={{backgroundColor:'transparent', border:"1.5px solid var(--border-color)", color:'white'}}
               id="title"
               name="title"
+              defaultValue={title || ''}
               type="text"
               className="input bg-[transparent] py-2 px-2 !focus:outline-none border rounded-lg"
               autoComplete="off"
@@ -84,7 +85,7 @@ export default function SeriesListForum({statusesOptions, typesOptions, genresOp
               >
                 Type
               </label>
-              <select style={{border:"1.5px solid var(--border-color)"}} id="type" className="input bg-[transparent] py-2 px-2 !focus:outline-none border rounded-lg" name="type">
+              <select defaultValue={type || ''} style={{border:"1.5px solid var(--border-color)"}} id="type" className="input bg-[transparent] py-2 px-2 !focus:outline-none border rounded-lg" name="type">
                 <option value=""  className="bg-[var(--background)] focus:bg-[var(--background)]" >All Types</option>
                 {typesOptionsElements}
               </select>
@@ -98,7 +99,7 @@ export default function SeriesListForum({statusesOptions, typesOptions, genresOp
               >
                 Status
               </label>
-              <select style={{border:"1.5px solid var(--border-color)"}} id="status" className="input bg-[transparent] py-2 px-2 focus:outline-none border rounded-lg" name="status">
+              <select defaultValue={status || ''} style={{border:"1.5px solid var(--border-color)"}} id="status" className="input bg-[transparent] py-2 px-2 focus:outline-none border rounded-lg" name="status">
                 <option value=""  className="bg-[var(--background)] focus:bg-[var(--background)]" >All Status</option>
                {statusesOptionsElements}
               </select>

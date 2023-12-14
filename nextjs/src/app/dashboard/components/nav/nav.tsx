@@ -9,6 +9,7 @@ import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import supabase from '../../../../../supabase';
 import { useRouter } from 'next/navigation';
+import toast from 'react-hot-toast';
 
 type navElement = {
   text: string,
@@ -24,8 +25,9 @@ type DropDownData = {
   URL?: string,
   isCurrent: boolean,
   options?: {
+    onClick?: any,
     text: string,
-    URL: string
+    URL?: string
   }[]
 }
 function ELement({ text, URL, options, isCurrent }: navElement) {
@@ -86,14 +88,34 @@ function ELement({ text, URL, options, isCurrent }: navElement) {
 function DropDown({ text, URL, options, isCurrent }: DropDownData) {
   const [isOn, setISOn] = useState<boolean>(false)
  
-  function Element({ text, URL }: { text: string, URL: string }) {
+  function Element({ text, URL, onClick }: { text: string, URL?: string, onClick?: ()=>Promise<void> }) {
     return (
+      <>
+      { URL ? (
       <Link
         className="cursor-pointer py-1 sm:px-2 w-full sm:hover:rounded-sm sm:hover:bg-black/10 sm:dark:hover:bg-white/10 duration-200 transition-colors"
         href={URL}
       >
         {text}
       </Link>
+      ) : (
+        <div
+        onClick={()=>{
+          const res = fetch('/api/revalidate-all')
+          toast.promise(res, {
+            loading: 'clearing cache',
+            error:'error clearing cache',
+            success:'cleared cache successfully'
+          })
+        }}
+        className="cursor-pointer py-1 sm:px-2 w-full sm:hover:rounded-sm sm:hover:bg-black/10 sm:dark:hover:bg-white/10 duration-200 transition-colors"
+        >
+         {text}
+
+        </div>
+      )
+      }
+      </>
     )
   }
   const elements = options?.map((option, i) => <Element {...option} key={i} />)
@@ -166,11 +188,20 @@ export default function DashboardNav({ currentPage }: { currentPage: string }): 
     },
     {
       text: 'ads settings',
-      URL: '/dashboard/settings/ads'
+      URL: '/dashboard/table/ads'
     },
     {
-      text: 'upload settings',
-      URL: '/dashboard/settings/upload'
+      text: 'clear cache',
+    
+    onclick: (async ()=>{
+      const res = fetch('/api/revalidate-all')
+      console.log('hi')
+      toast.promise(res, {
+        loading:'clearing',
+        error:'error deleting cache',
+        success:'deleted cache successfully'
+      })
+    })
     }
   ]
 
@@ -234,7 +265,7 @@ export default function DashboardNav({ currentPage }: { currentPage: string }): 
 
           <Link
             className="cursor-pointer hover:text-black dark:hover:text-white duration-200 transition-colors text-gray-500"
-            href="/dashboard/pages"
+            href="/dashboard/table/pages"
           >
             Pages
           </Link>

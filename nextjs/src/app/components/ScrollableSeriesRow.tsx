@@ -83,7 +83,7 @@ return (
       id={`${headerText.split(' ').join('-').toLowerCase()}-swiper`}
       //loop={true}
       class="max-h-lg cards-container pb-7 swiper-initialized swiper-horizontal"
-      style={{   width:'100%', display: 'block'}}
+      style={{   width:'100%', display: 'flex', gap:'10px'}}
     >
     
       {cards}

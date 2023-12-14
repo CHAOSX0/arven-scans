@@ -268,3 +268,6 @@ border:none;
   font-size: medium;
   color: gray !important; /* Change the color to desired value */
 }
+.tox-tinymce{
+  border: 1px solid transparent !important;
+}

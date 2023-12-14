@@ -8,6 +8,8 @@ import { faker } from '@faker-js/faker';
 import seriesData from './types/series'
 import bannerData from './types/banner'
 import type { Metadata, ResolvingMetadata } from 'next'
+import Ads from './components/ads'
+import supabase from '../../supabase'
 async function getBanners(n: number): Promise<bannerData[]>{
 
   const res = await fetch('https://uuckqeakqoiezqehbitr.supabase.co/rest/v1/series?isSlider=is.true&BannerURL=neq.null', {
@@ -86,13 +88,19 @@ async function getLatesAddedSeriesData(n: number): Promise<seriesData[]>{
 
   return await res.json()
 }
-
+async function getSliderStatus(): Promise<boolean> {
+  const {data, error } = await supabase.from('settings').select().eq('name', 'theme-slider-enabled')
+  if(error){
+    return false
+  }
+  return data[0].value == 'true'
+}
 export const revalidate = 60*10
 
 export default async function Home() {
   let i = -1
- 
-    const sliderData: bannerData[] = await getBanners(5)
+    const isSliderVisible = await getSliderStatus()
+    const sliderData: bannerData[] = isSliderVisible? await getBanners(5) : []
     const PopularSeriesData: seriesData[] = await getPopularSeriesData(15)
     const recentlyAddedData: seriesData[] = await getLatesAddedSeriesData(15)
   return (
@@ -102,15 +110,21 @@ export default async function Home() {
     <section
         className="-mt-4 mb-5 ml-[calc((100%-100vw)/2)] w-screen sm:-mt-24"
         id="slider-container"
-        style={{ marginLeft: "calc(((100% - 100vw) - 10px) / 2)", overflow:'hidden', paddingBottom: '10px'}}
+        style={{ marginLeft: "calc(((100% - 100vw) - 10px) / 2)", overflow:'hidden', paddingBottom: '10px', paddingTop:isSliderVisible? '' : '50px'}}
       >
       <SeriesSwiper data={sliderData}/>
       </section>
+      <Ads Type='above-popular-home' currentPage='Home' />
       <ScrollableSeriesRow headerText='Most Popular' data={PopularSeriesData} />
+      <Ads Type='above-latest-home' currentPage='Home' />
+
       <ScrollableSeriesRow headerText='Recently Added' data={recentlyAddedData} />
+      <Ads Type='above-chapters-home' currentPage='Home' />
+
      <RecentChapters />
     </main>
     <Footer />
+    <Ads Type='float' currentPage='Home' />
   </>
   
   )

@@ -1,6 +1,6 @@
 import Nav from "@/app/components/Nav";
 import seriesData from "@/app/types/series";
-
+import Ads from "@/app/components/ads";
 import Footer from "@/app/components/footer";
 import Bookmark from "./bookmark";
 import Link from "next/link";
@@ -105,21 +105,22 @@ export default async function Series({ params }: { params: { seriesID: string } 
               <div className="hidden sm:flex sm:flex-col sm:gap-1 sm:text-sm">
                 <p className="flex justify-between !text-opacity-50 dark:text-white text-[--text-color]">
                   <span className="text-[--text-color]">Status</span>
-                  <a
-                    href="https://iimanga.com/manga?status=Ongoing"
+                  <Link
+                    href={`/SeriesList?status=${status}`}
                     className="transition-colors duration-200 hover:text-blue-500 dark:hover:text-white text-[--text-color]"
                   >
                     <span className="capitalize text-[--text-color]">{status}</span>
-                  </a>
+                  </Link>
                 </p>
                 <p className="flex justify-between !text-opacity-50 dark:text-white">
                   <span  className="text-[--text-color]">Type</span>
-                  <a
-                    href="https://iimanga.com/manga?type=Manhua"
+                  <Link
+                    href={`/SeriesList?type=${type}`}
+                    
                     className="transition-colors duration-200 hover:text-blue-500 dark:hover:text-white "
                   >
                     <span className="capitalize text-[--text-color]">{type}</span>
-                  </a>
+                  </Link>
                 </p>
                 <p className="flex justify-between !text-opacity-50 dark:text-white text-[--text-color]">
                   <span  className="text-[--text-color]" >Year</span>
@@ -139,8 +140,9 @@ export default async function Series({ params }: { params: { seriesID: string } 
                 </p>
               </div>
             </div>
+        
             <div className="flex w-full flex-col gap-3">
-            
+            <Ads Type='above-title-manga' currentPage='Series' />
               <div className="flex flex-wrap gap-1">
               <Genres genres={genres} />
               </div>
@@ -199,6 +201,7 @@ export default async function Series({ params }: { params: { seriesID: string } 
                   <span className="text-sm font-bold">{ratting}</span>
                 </div>
               </div>
+            <Ads Type='below-information-manga' currentPage='Series' />
               <SwitchContainer seriesID={params.seriesID} />
             </div>
           </div>

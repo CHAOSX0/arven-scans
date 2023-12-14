@@ -21,14 +21,14 @@ return (
     <div className="mb-1 flex items-center justify-between text-sm">
             <a
               style={{border: '1.5px solid var(--border-color)'}}
-              className="boder-black/10 w-fit rounded-md border-[1px] bg-transparent px-3 py-1 text-center text-xs transition hover:bg-[--background] hover:text-[-text-color] dark:border-white/10 dark:text-[--text-color] dark:hover:bg-[--text-color] dark:hover:text-[--background-color]"
+              className="boder-black/10 w-fit rounded-md border-[1px] bg-transparent px-3 py-1 text-center text-xs transition text-[--text-color] hover:bg-[--text-color] hover:text-[--background]"
               href={URL}
             >
-              <span className="hidden sm:inline-block text-[--text-color]">Chapter</span>
-              <span className="sm:hidden text-[--text-color]">Chp</span>
-              <b className='text-[--text-color]'>{number}</b>
+              <span className="hidden sm:inline-block ">Chapter</span>
+              <span className="sm:hidden">Chp</span>
+              <b className=''>{number}</b>
             </a>
-            <span className="text-xs text-gray-500 dark:text-gray-300 sm:block text-[--text-color]">
+            <span className="text-xs text-gray-500 dark:text-gray-300 sm:block ">
               {getTimeAgo(created_at)} ago
             </span>
           </div>

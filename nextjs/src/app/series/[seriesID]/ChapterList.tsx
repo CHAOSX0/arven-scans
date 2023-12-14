@@ -80,24 +80,7 @@ return (
       </form>
       <div className="mt-5 flex flex-col gap-4" />
     </div>
-    <div className="hidden lg:block lg:w-1/4">
-      <p className="mb-3 block text-lg font-bold leading-[1rem] text-[--text-color]">
-        Uploader
-      </p>
-      <div className="flex gap-3">
-        <img
-          className="h-16 w-16 shrink-0 rounded-md object-cover"
-          alt="admin"
-          src="https://iimanga.com/storage/avatars/64e3c6940aca5.webp"
-        />
-        <div>
-          <p className="text-base font-bold text-[--text-color]">admin</p>
-          <p className="text-xs font-medium leading-4 text-gray-400 text-[--text-color]">
-            Admin description
-          </p>
-        </div>
-      </div>
-    </div>
+   
   </div>
 )
 }

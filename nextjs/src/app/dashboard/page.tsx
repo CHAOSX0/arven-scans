@@ -3,9 +3,9 @@ import supabase from "../../../supabase";
 import { notFound } from "next/navigation";
 
 import { createClient } from '@supabase/supabase-js'
-type timeLogNumbers ={lastMonth: number, currentMonth: number}
+type timeLogNumbers = { lastMonth: number, currentMonth: number }
 async function getViews(): Promise<timeLogNumbers> {
-   
+
   const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL
   const SUPABASE_SERVICE_ROLE = process.env.SUPABASE_SERVICE_ROLE
   if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE) notFound();
@@ -15,13 +15,13 @@ async function getViews(): Promise<timeLogNumbers> {
       persistSession: false
     }
   })
-  const {data, error} = await SupabaseAdmin.from('analytics').select('number, created_at').order('created_at', {ascending: false})
+  const { data, error } = await SupabaseAdmin.from('analytics').select('number, created_at').order('created_at', { ascending: false })
 
-  if(error) notFound();
+  if (error) notFound();
   const latest_log = data[0]
   const second_to_last = data[1]
-  const ms_in_month = 1000*60*60*24*30;
-  const is_latest_log_month_old = new Date().getTime() -  new Date(latest_log.created_at).getTime() > ms_in_month
+  const ms_in_month = 1000 * 60 * 60 * 24 * 30;
+  const is_latest_log_month_old = new Date().getTime() - new Date(latest_log.created_at).getTime() > ms_in_month
   return {
     //$ if the latest month is a month old or its number is falsy (i.e: 0, undefined, null) return 0 otherwise return the number
     currentMonth: is_latest_log_month_old ? 0 : data?.[0]?.number || 0,
@@ -33,19 +33,19 @@ async function getViews(): Promise<timeLogNumbers> {
 //$Fetch Functions Start
 async function GetTotalTable(table: string): Promise<timeLogNumbers> {
   const { error: currentError, count: currentCount } = await supabase.from(table).select('*', { count: 'exact', head: false })
-  if (currentError)  notFound();
-  const {error: logsError, data: logsData} = await supabase.from('analytics').select('number').eq('type', `${table}_count`).limit(2)
+  if (currentError) notFound();
+  const { error: logsError, data: logsData } = await supabase.from('analytics').select('number').eq('type', `${table}_count`).limit(2)
   const lastMonthLog = logsData?.[1]
-  if(logsError) notFound();
+  if (logsError) notFound();
   //$ if count is null return zero
   return {
     lastMonth: lastMonthLog?.number || 0,
     currentMonth: currentCount || 0
   }
 }
-async function getUserCount(): Promise<timeLogNumbers>{
+async function getUserCount(): Promise<timeLogNumbers> {
   //@ this function uses service role (admin credentials) BE CAREFUL
-  
+
   const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL
   const SUPABASE_SERVICE_ROLE = process.env.SUPABASE_SERVICE_ROLE
   if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE) notFound();
@@ -56,34 +56,43 @@ async function getUserCount(): Promise<timeLogNumbers>{
     }
   })
   const { count: currentCount, error: currentError } = await SupabaseAdmin.from('users').select('', { count: 'exact', head: false })
-  const {data: logData, error: logError} = await SupabaseAdmin.from('analytics').select('number, created_at').order('created_at', {ascending: false}).eq('type', 'user_count')
-  const second_toLast_log =logData?.[1]
+  const { data: logData, error: logError } = await SupabaseAdmin.from('analytics').select('number, created_at').order('created_at', { ascending: false }).eq('type', 'user_count')
+  const second_toLast_log = logData?.[1]
   //$ throw any errors
   if (currentError || logError) notFound();
   //$ if count is null return zero
-  return {lastMonth: second_toLast_log?.number || 0, currentMonth: currentCount || 0}
+  return { lastMonth: second_toLast_log?.number || 0, currentMonth: currentCount || 0 }
 }
 
-function getPercentage(current: number, last: number): string{
-  return `${current - last >= 0 ?  '' : '-' }${Math.abs(100 - Math.round(current / last * 10000)/10000 *100 )}%`
+function getPercentage(current: number, last: number): string {
+  console.log(current)
+  return `${current - last >= 0 ? '' : '-'}${Math.abs(100 - Math.floor(current / last * 10000) / 10000 * 100)}%`
+}
+async function getDiscordLink() {
+  const {data, error} = await supabase.from('settings').select('value').eq('name', 'theme-discord')
+  if(error){
+    return ''
+  }
+  return data[0].value
 }
 export const revalidate = 1
 export default async function Dashboard() {
   const seriesCount: timeLogNumbers = await GetTotalTable('series')
   const chapterCount: timeLogNumbers = await GetTotalTable('chapters')
   const userCount: timeLogNumbers = await getUserCount()
-  const views: timeLogNumbers  = await getViews()
+  const views: timeLogNumbers = await getViews()
   const viewsRisePercentage = getPercentage(views.currentMonth, views.lastMonth)
   const userCountPercentage = getPercentage(userCount.currentMonth, userCount.lastMonth)
   const chapterCountPercentage = getPercentage(chapterCount.currentMonth, chapterCount.lastMonth)
   const seriesCountPercentage = getPercentage(userCount.currentMonth, userCount.lastMonth)
+  const discordLink = await getDiscordLink()
   return (
     <main className="relative">
       <DashboardNav currentPage="/" />
       <section className="container-app pl-4 pt-4">
         <section className="flex flex-col gap-5">
           <h3 className="text-3xl font-bold tracking-tight">Dashboard</h3>
-          <a href="https://discord.gg/arven">
+          <a href={discordLink}>
             <div className="flex items-start gap-3 rounded-md bg-gray-600 p-3 text-white transition hover:bg-gray-700">
               <svg
                 width={48}
@@ -207,7 +216,7 @@ export default async function Dashboard() {
               <div className="flex flex-col">
                 <span className="text-2xl font-bold">{userCount.currentMonth}</span>
                 <span className="text-muted-foreground text-xs text-gray-500">
-                 {userCountPercentage} from last month
+                  {userCountPercentage} from last month
                 </span>
               </div>
             </div>

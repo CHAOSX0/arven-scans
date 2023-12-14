@@ -1,4 +1,5 @@
 "use client"
+
 import Link from "next/link"
 import supabase from "../../../supabase"
 import { useEffect, useState } from "react"
@@ -16,14 +17,21 @@ export default function Nav() {
     document.documentElement.style.setProperty(`--border-color`, !isDark ? '#0000001a' : 'rgba(255, 255, 255, 0.15)' ); 
   }
     useEffect(()=>{
-      const isDark = localStorage.getItem('dark') == 'true'
+      const localIsDark = localStorage.getItem('dark')
+      if(!localIsDark){
+        supabase.from('settings').select('value').eq('name', 'theme-default-mode').then(res=>{
+          setIsDark(res?.data?.[0].value == 'dark')
+        })
+      }else{
+        setIsDark(localIsDark == 'true')
       if (localStorage.getItem('dark') === 'true' || (!('dark' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
         document.documentElement.classList.add('dark');
+
     } else {
         document.documentElement.classList.remove('dark')
     }
-      console.log(isDark, 'isDark \n\n\n\n\n\n\n')
-      setIsDark(isDark)
+  }
+      
         supabase.auth.getUser().then(session=>{
          
           setUser(session.data.user)

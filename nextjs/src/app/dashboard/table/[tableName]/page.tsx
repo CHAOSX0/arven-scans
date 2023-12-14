@@ -11,13 +11,14 @@ import Modal from "./modal";
 import toast from "react-hot-toast";
 import Search from "@mui/icons-material/Search";
 async function getPage(pageNum: number, pageSize: number, tableName: string, query?: string) {
-  type objectType = {'comments': 'text', 'series': string, 'genres': string, 'chapters': string, 'types': string}
+  type objectType = {'comments': 'text', 'series': string, 'genres': string, 'chapters': string, 'types': string, "ads": string}
   const searchCols:objectType = {
     "comments": 'text',
     "series": 'title',
     "genres": 'text',
     "chapters": 'seriesSlug',
     "types": 'slug',
+    "ads": 'name'
   }
   if(query ){
   const queryCol =searchCols[`${tableName as keyof objectType }`] as any || 'title'
@@ -37,13 +38,14 @@ async function getPage(pageNum: number, pageSize: number, tableName: string, que
 
 //this is needed for pagination
 async function getRowsNumber(tableName: string, query?: string): Promise<number> {
-  type objectType = {'comments': 'text', 'series': string, 'genres': string, 'chapters': string, "types": string}
+  type objectType = {'comments': 'text', 'series': string, 'genres': string, 'chapters': string, "types": string, "ads": string}
   const searchCols:objectType = {
     "comments": 'text',
     "series": 'title',
     "genres": 'text', 
     "chapters": 'seriesSlug',
     "types": 'slug',
+    "ads": 'name'
   }
   if(query ){
     const { count, error } = await supabase.from(tableName).select('*', { count: 'exact', head: false }).textSearch(`${searchCols[`${tableName as keyof objectType }`] as any || 'title'}`, query)

@@ -94,7 +94,7 @@ export default function SeriesAdd() {
         const authURL = auth_Promise ? `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/settings/${(await auth_Promise).data?.path || ''}` : undefined
         if (logoURL) {
             setIconsPreLoaded(prev => {
-                return { ...prev, favicon: `${logoURL}}` }
+                return { ...prev, favicon: `${logoURL}` }
 
             })
         }
@@ -103,7 +103,7 @@ export default function SeriesAdd() {
         }
         const { error: titleError } = await supabase.from('settings').update({ value: title }).eq('name', 'site-title')
         if (logoURL) {
-            const { error: favError } = await supabase.from('settings').update({ value: title }).eq('name', 'favicon')
+            const { error: favError } = await supabase.from('settings').update({ value: logoURL}).eq('name', 'favicon')
            if(favError){
             toast.error('an error occurred')
            }
