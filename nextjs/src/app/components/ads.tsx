@@ -28,7 +28,7 @@ export default async function Ads({ currentPage, Type }: { currentPage: string, 
       const isHor = ad.identifier == 'float-top' || ad.identifier == 'float-bottom'
       const isScript = ad.type == 'script'
       console.log(isScript)
-      return (<Ad identifier={ad.identifier} URL={ad.URL} id={ad.id} bannerURL={ad.bannerURL} code={ad.code} isScript={isScript} is_horizontal={isHor} isDefault={false}  />)
+      return (<Ad key={i} identifier={ad.identifier} URL={ad.URL} id={ad.id} bannerURL={ad.bannerURL} code={ad.code} isScript={isScript} is_horizontal={isHor} isDefault={false}  />)
       
     })
    /// console.log(adsList, 'list')
