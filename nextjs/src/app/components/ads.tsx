@@ -22,7 +22,14 @@ export default async function Ads({ currentPage, Type }: { currentPage: string, 
   if(isFloat){
     const adsList = await getAds()
     const floatsIds = ['float-right', 'float-left', 'float-top', 'float-bottom']
-    const floats = adsList.filter(e=>floatsIds.includes(e.identifier))
+    const floats = adsList.filter(e=>floatsIds.includes(e.identifier)).filter(e=>{
+      if(e.type == 'banner' && e.URL){
+        return true
+      }
+      if(e.type == 'script' && e.code){
+        return true
+      }
+    })
     console.log(floats, 'float')
     const floatsElements  = floats.map((ad, i)=>{
       const isHor = ad.identifier == 'float-top' || ad.identifier == 'float-bottom'

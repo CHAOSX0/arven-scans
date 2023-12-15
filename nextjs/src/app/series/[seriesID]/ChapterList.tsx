@@ -2,7 +2,7 @@ import chapter from "@/app/types/chapter";
 import supabase from "../../../../supabase"
 import Link from "next/link";
 async function getCahpters(slug: string){
-const {data, error} = await supabase.from('chapters').select('*').eq('seriesSlug', slug)
+const {data, error} = await supabase.from('chapters').select('*').eq('seriesSlug', slug).order('number')
 if(error) return console.log(error);
 return data;
 }

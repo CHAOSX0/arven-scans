@@ -13,12 +13,16 @@ export async function generateMetadata(params: any, parent: ResolvingMetadata): 
   const title =  (await supabase.from('settings').select('value').eq('name', 'site-title'))?.data?.[0].value
   const keywords = (await supabase.from('settings').select('value').eq('name', 'site-keywords'))?.data?.[0].value
   const description = (await supabase.from('settings').select('value').eq('name', 'site-description'))?.data?.[0].value
+  const favicon = (await supabase.from('settings').select('value').eq('name', 'favicon'))?.data?.[0].value
   console.log(title, 'title')
+  console.log(favicon)
   return {
     title: title,
     keywords:keywords,
     description: description,
-    
+    icons:{
+      icon: favicon
+    }
   }
 }
 
